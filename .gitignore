@@ -6,15 +6,11 @@ Exyte.DAL/bin/Release/*
 Exyte.DAL/bin/Debug/*
 Exyte.DAL/obj/*
 packages/*
-Tool_Cost_Web/bin/*
-Tool_Cost_Web/obj/*
 Exyte.Provider/bin/Debug/*
 Exyte.Provider/bin/Release/*
 Exyte.Provider/obj/*
 Exyte.Models/bin/*
 Exyte.Models/obj/*
-Exyte_Barcode/bin/*
-Exyte_Barcode/obj/*
 bin/*
 log/webLogs.log
 
