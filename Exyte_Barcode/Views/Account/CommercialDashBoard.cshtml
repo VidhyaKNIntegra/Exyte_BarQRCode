@@ -1,0 +1,79 @@
+﻿
+@{ ViewBag.Title = "CommercialDashBoard";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Item Codes</strong></h3>
+                    <br />
+                    <div class="row">
+
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 style="color:green;">Total Items </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 id="ItemCodes"></h4>
+                            <div class="text-right">
+                                <a href="../Home/Index"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Import More Data</strong></h3>
+                    <br />
+                    <div class="row" style="padding:4px;">
+
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-10">
+                            <span>Upload Excel Data</span>
+                            <br />
+                            <div class="text-right">
+                                <a href="../FileUpload/FileUpload"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
+
+<script>
+    $.ajax({
+        type: "GET",
+        //url: "/Account/CommercialDashboardDetails",
+        url: '@Url.Action("CommercialDashboardDetails", "Account")',
+        contentType: "application/json",
+        success: function (data) {
+            $('#ItemCodes').text(data.ItemCodes);
+        }
+    });
+
+</script>

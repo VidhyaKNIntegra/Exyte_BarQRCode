@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="gx-card">
+                <div class="gx-card-header">
+                    <h3 class="card-heading">Sign up</h3>
+                </div>
+                <div class="gx-card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="FirstNameTxt">First Name : </label>
+                            <input type="text" class="form-control" data-bind="value:FirstName" id="FirstNameTxt" />
+                            <span id="FirstNameTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="LastNameTxt">Last Name : </label>
+                            <input type="text" class="form-control" data-bind="value:LastName" id="LastNameTxt" />
+                            <span id="LastNameTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="PhoneTxt">Phone No : </label>
+                            <input type="text" class="form-control" data-bind="value:PhoneNo" id="PhoneTxt" />
+                            <span id="PhoneTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="EmailTxt">Email : </label>
+                            <input type="text" class="form-control" data-bind="value:Email" id="EmailTxt" />
+                            <span id="EmailTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        @*<div class="form-group">
+                                <label for="passwordTxt">Password : </label>
+                                <input type="password" class="form-control" data-bind="value:Password" id="passwordTxt" />
+                                <span id="passwordTxtErr" style="color:red;font-size:12px;"></span>
+                            </div>*@
+                        <div class="form-group">
+                            <label for="RoleTypeDropDwn">Role Type : </label>
+                            <select class="form-control" id="RoleTypeDropDwn"><option value="choose">choose..</option></select>
+                            <span id="RoleTypeDropDwnErr" style="color:red;font-size:12px;"></span>
+                        </div>
+
+
+                        <button class="btn btn-primary" data-bind="click:submit">Sign up</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3"></div>
+        </div>
+    </div>
+<script>
+    var UserID = '@Session["UserID"]';
+    var UserName = '@Session["UserName"]';
+    var CategoryID = '@Session["CategoryID"]';
+</script>
+@Scripts.Render("~/bundles/signup")
+

@@ -1,0 +1,540 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    <div class="container">
+        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center">
+            <h2 class="title mb-3 mb-sm-0">
+                Users
+            </h2>
+            <nav class="mb-0 breadcrumb">
+                <a style="float:right; margin-right:10px;" class="btn btn-primary pull-right" data-toggle='modal' data-bind="click:ClearOldValue" data-target='#myModal2'><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> Add Users</a>
+            </nav>
+        </div>
+        <div class="gx-card">
+            <div class="gx-card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="userTable"></table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+              
+                <h4 class="modal-title">Edit Details</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row">
+                                <input type="hidden" data-bind="value:KeyId" class="form-control" id="keyIdtxt" />
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="FirstNameTxt"> First Name :  </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" data-bind="value:FirstName" class="form-control" id="FirstNameTxt" />
+                                    <span id="FirstNameTxtErr" style="font-size:12px;color:red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="LastNameTxt">  Last Name :  </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" data-bind="value:LastName" class="form-control" id="LastNameTxt" />
+                                    <span id="LastNameTxtErr" style="font-size:12px;color:red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="EmailTxt"> Email : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" data-bind="value:Email" class="form-control" id="EmailTxt" />
+                                    <span id="EmailTxtErr" style="font-size:12px;color:red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="PhoneTxt"> Phone No : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" data-bind="value:PhoneNo" id="PhoneTxt" />
+                                    <span id="PhoneTxtErr" style="font-size:12px;color:red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="roleTypTxt"> Role Type : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="roleTypTxt"></select>
+                                    <span id="roleTypTxtErr" style="font-size:12px;color:red;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bind="click:UpdateUserDetails"><i class='zmdi zmdi-check-circle zmdi-hc-fw'></i>Update</button>
+                <button type="button" class="btn btn-default" style="color:white;background-color:dimgray" data-dismiss="modal"><i class='zmdi zmdi-close-circle-o zmdi-hc-fw'></i>Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                
+                <h4 class="modal-title">Add User</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="FirstNameTxt">First Name : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" data-bind="value:FirstName1" id="FirstNameTxt" />
+                                    <span id="FirstNameTxtErr1" style="color:red;font-size:12px;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="LastNameTxt">Last Name : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" data-bind="value:LastName1" id="LastNameTxt" />
+                                    <span id="LastNameTxtErr1" style="color:red;font-size:12px;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="PhoneTxt">Phone No : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" data-bind="value:PhoneNo1" id="PhoneTxt" />
+                                    <span id="PhoneTxtErr1" style="color:red;font-size:12px;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="EmailTxt">Email : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" data-bind="value:Email1" id="EmailTxt" />
+                                    <span id="EmailTxtErr1" style="color:red;font-size:12px;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="text-right">
+                                        <label for="RoleTypeDropDwn">Role Type : </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+
+                                    <select class="form-control" id="RoleTypeDropDwn"><option value="choose">choose..</option></select>
+                                    <span id="RoleTypeDropDwnErr1" style="color:red;font-size:12px;"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" data-bind="click:submit">Add User</button>
+                <button class="btn btn-primary" data-bind="click:ClearOldValue">Clear</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    var UserID = '@Session["UserID"]';
+    var UserName = '@Session["UserName"]';
+    var CategoryID = '@Session["CategoryID"]';
+
+    LoadUserTable();
+    function LoadUserTable() {
+        $.ajax({
+            type: "GET",
+            //url: "/Account/GetAllUsers",
+            url: '@Url.Action("GetAllUsers", "Account")',
+            contentType: "application/json",
+            //data: { "id": UserID },
+            success: function (data) {
+
+                $('#userTable').DataTable({
+                    data: data,
+                    "bDestroy": true,
+                    columns: [
+                        { 'data': 'Id', 'title': 'SL. NO.' },
+                        { 'data': 'FirstName', 'title': 'NAME', 'className': 'text-left' },
+                        { 'data': 'Email', 'title': 'EMAIL' },
+                        { 'data': 'PhoneNo', 'title': 'PHONE NO.', 'className': 'text-left' },
+                        { 'data': 'RoleName', 'title': 'ROLE' },
+                        {
+                            'data': 'KeyId',
+                            'title': 'Action',
+                            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                $(nTd).html("<i class='zmdi zmdi-edit zmdi-hc-fw text-success' style='cursor: pointer;' onclick='editUserDetails(" + oData.KeyId + ")' data-toggle='modal' data-target='#myModal' ></i>" +
+                                    "&nbsp;&nbsp;<i class='zmdi zmdi-delete zmdi-hc-fw text-danger' style='cursor: pointer;' onclick='DeleteUser(" + oData.KeyId + ")' value='Delete' id='Delete'></i>");
+                            }
+
+                        }
+                    ]
+                });
+            }
+        });
+    }
+    function clearData() {
+        $('#FirstName').val('');
+        $('#LastName').val('');
+        $('#Email').val('');
+        $('#PhoneNo').val('');
+    }
+    function editUserDetails(detail) {
+        //ajax call
+        $.ajax({
+            type: "GET",
+            //url: "/Account/GetParticularUser/" + detail,
+            url: '@Url.Action("GetParticularUser", "Account")',
+            contentType: "application/json",
+            data: { id: detail},
+            success: function (data) {
+                self.KeyId(data[0].KeyId);
+                self.FirstName(data[0].FirstName);
+                self.LastName(data[0].LastName);
+                self.Email(data[0].Email);
+                self.PhoneNo(data[0].PhoneNo);
+                //alert(data[0].RoleId);
+                $('#roleTypTxt').val(data[0].RoleId);
+                //$('#roleTypTxt option[value=' + data[0].RoleId + ']')
+                //.attr('selected', true);
+            },
+            error: function (error) {
+                sweetAlert("Error",error.status + '' + error.statusText,  "error");
+            }
+        });
+
+    };
+
+    GetRoleDetails();
+    GetRoleTypes();
+
+    function GetRoleDetails() {
+        //ajax call
+        $.ajax({
+            type: "GET",
+            //url: "/Account/GetRoleDetails",
+            url: '@Url.Action("GetRoleDetails", "Account")',
+            contentType: "application/json",
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    //alert(value.RoleId + " :: " + value.RoleName);
+                    $("#roleTypTxt").append($("<option></option>").val(value.RoleId).html(value.RoleName));
+                });
+            },
+            error: function (error) {
+                sweetAlert("Error",error.status + '' + error.statusText,  "error");
+            }
+        });
+    };
+
+    function GetRoleTypes() {
+        //ajax call
+        $.ajax({
+            type: "GET",
+            //url: "/Account/GetRoleTypes",
+            url: '@Url.Action("GetRoleTypes", "Account")',
+            contentType: "application/json",
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $("#RoleTypeDropDwn").append($("<option></option>").val(value.RoleId).html(value.RoleName));
+                });
+            },
+            error: function (error) {
+                sweetAlert("Error",error.status + '' + error.statusText,  "error");
+            }
+        });
+    };
+    function DeleteUser(detail) {
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this again!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, I am sure!',
+            cancelButtonText: "No, cancel it!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("DeleteUser", "Account")',
+                        contentType: "application/json",
+                        data: { id: detail },
+                        success: function (data) {
+                            if (data == 'success') {
+                                sweetAlert("Success","User deleted successfully!",  "success");
+                                LoadUserTable();
+                            }
+                        },
+                        error: function (error) {
+                            sweetAlert("Error",error.status + '' + error.statusText,  "error");
+                        }
+                    });
+                } else {
+                    swal("Cancelled", "You have cancelled the operation.", "error");
+                }
+            }
+        );
+    }
+    var UserDetailsViewModel = function () {
+
+    self.Id = ko.observable();
+    self.KeyId = ko.observable();
+    self.FirstName = ko.observable();
+    self.LastName = ko.observable();
+    self.Email = ko.observable();
+    self.PhoneNo = ko.observable();
+
+    self.FirstName1 = ko.observable("");
+    self.LastName1 = ko.observable("");
+    self.Email1 = ko.observable("");
+    self.PhoneNo1 = ko.observable("");
+
+    self.ClearOldValue = function () {
+        self.FirstName1("");
+        self.LastName1("");
+        self.PhoneNo1("");
+        self.Email1("");
+        $('#RoleTypeDropDwn').val("choose");
+    }
+
+        self.submit = function () {
+        $('#FirstNameTxtErr1').text('');
+        $('#LastNameTxtErr1').text('');
+        $('#PhoneTxtErr1').text('');
+        $('#EmailTxtErr1').text('');
+        $('#passwordTxtErr1').text('');
+        $('#RoleTypeDropDwnErr1').text('');
+        var email_regex = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+        //var mobnoLength = self.PhoneNo();
+        var mobnoLength = (typeof (self.PhoneNo1()) != 'undefined') ? self.PhoneNo1().length : 0;
+        if (self.FirstName1() == '' && self.PhoneNo1() == '' && self.Email1() == '' && $('#RoleTypeDropDwn').val() == '') {
+            $('#FirstNameTxtErr1').text('Enter the First Name');
+            $('#LastNameTxtErr1').text('Enter the Last Name');
+            $('#PhoneTxtErr1').text('Enter the Phone Number');
+            $('#EmailTxtErr1').text('Enter the Email');
+            //$('#passwordTxtErr1').text('Enter the Password');
+            $('#RoleTypeDropDwnErr1').text('Select the Role Type');
+        } else if (typeof (self.FirstName1()) == 'undefined' ||self.FirstName1() == '' ) {
+            $('#FirstNameTxtErr1').text('Enter the First Name');
+        }
+        //else if (typeof (self.LastName1()) == 'undefined' || self.LastName1() == '') {
+        //    $('#LastNameTxtErr1').text('Enter the Last Name');
+        //}
+        else if (typeof (self.PhoneNo1()) == 'undefined' || self.PhoneNo1() == '') {
+            $('#PhoneTxtErr1').text('Enter the Phone Number');
+        } else if (mobnoLength != 10) {
+            $('#PhoneTxtErr1').text('Enter the valid Phone Number');
+        } else if (typeof (self.Email1()) == 'undefined' || self.Email1() == '') {
+            $('#EmailTxtErr1').text('Enter the Email');
+        }
+        else if (!email_regex.test(self.Email1())) {
+            $('#EmailTxtErr1').text('Enter valid the Email');
+        }
+        //else if (self.Password() == '') {
+        //    $('#passwordTxtErr').text('Enter the Password');
+        //}
+        else if ($('#RoleTypeDropDwn').val() == 'choose' || $('#RoleTypeDropDwn').val() == '') {
+            $('#RoleTypeDropDwnErr1').text('Select the Role Type');
+        }
+        else {
+            var password = "Exyte_" + self.FirstName1();
+            var roleId = $('#RoleTypeDropDwn').val();
+            var RData = {
+                FirstName: self.FirstName1,
+                LastName: self.LastName1,
+                PhoneNo: self.PhoneNo1,
+                Email: self.Email1,
+                Password: password,
+                RoleId: roleId,
+                UserId: UserID
+            };
+            //Ajax call to Insert the customer
+            $.ajax({
+                type: "POST",
+                //url: "/Account/RegisterUser",
+                url: '@Url.Action("RegisterUser", "Account")',
+                data: ko.toJSON(RData), //Convert the Observable Data into JSON
+                contentType: "application/json",
+                success: function (data) {
+                    if (data == 'success') {
+                        $("#myModal2").modal("hide");
+                        sweetAlert("Success","User registered successfully",  "success");
+                        clearData();
+                        //window.location.reload();
+                        LoadUserTable();
+                    }
+                    else if (data == 'exists') {
+                        sweetAlert("Error","Email is already Exist",  "error");
+                    }
+                    else {
+                        sweetAlert("Error","Error while adding user. Pleaes try after some time.",  "error");
+                    }
+
+                },
+                error: function () {
+                   sweetAlert("Error","Error while adding user. Pleaes try after some time.",  "error");
+                }
+            });
+        }
+
+    }
+
+    //function to perform update Detail
+    self.UpdateUserDetails = function () {
+        $('#FirstNameTxtErr').text('');
+        $('#LastNameTxtErr').text('');
+        $('#EmailTxtErr').text('');
+        $('#PhoneTxtErr').text('');
+        if (self.FirstName() == '' && self.Email() == '' && self.PhoneNo() == '') {
+            $('#FirstNameTxtErr').text('Enter the First Name');
+            $('#LastNameTxtErr').text('Enter the Last Name');
+            $('#EmailTxtErr').text('Enter the Email');
+            $('#PhoneTxtErr').text('Enter the Phone No');
+        }
+        else if (self.FirstName() == '') {
+            $('#FirstNameTxtErr').text('Enter the First Name');
+        }
+        //else if (self.LastName() == '') {
+        //    $('#LastNameTxtErr').text('Enter the Last Name');
+        //}
+        else if (self.Email() == '') {
+            $('#EmailTxtErr').text('Enter the Email');
+        }
+        else if (self.PhoneNo() == '') {
+            $('#PhoneTxtErr').text('Enter the Phone No');
+        }
+        else {
+            var Pid = $('#roleTypTxt').children('option:selected').val();
+
+            var Data = {
+                FirstName: self.FirstName,
+                LastName: self.LastName,
+                PhoneNo: self.PhoneNo,
+                Email: self.Email,
+                UserId: UserID,
+                KeyId: self.KeyId,
+                RoleId: Pid
+            };
+            //ajax call
+            $.ajax({
+                type: "POST",
+                //url: "/Account/UpdateUserDetails",
+                url: '@Url.Action("UpdateUserDetails", "Account")',
+                data: ko.toJSON(Data),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data == 'success') {
+                        $("#myModal").modal("hide");
+                        sweetAlert("Success","User details updated successfully",  "success");
+                        clearData();
+                        LoadUserTable();
+                    }
+
+                },
+                error: function (error) {
+                    sweetAlert("Error",error.status + '' + error.statusText,  "error");
+                }
+            });
+        }
+    };
+    //update ends here
+
+};
+ko.applyBindings(new UserDetailsViewModel());
+</script>
+@*@Scripts.Render("~/bundles/User")*@

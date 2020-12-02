@@ -1,0 +1,112 @@
+﻿
+@{ ViewBag.Title = "Settings";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+<br />
+
+<div class="container">
+        <div class="col-md-6">
+            <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center">
+                <h2 class="title mb-3 mb-sm-0">
+                    Change Password
+                </h2>
+            </div>
+            <div class="gx-card">
+                <div class="gx-card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="oldPasswrdTxt">Old Password</label>
+                            <input type="password" id="oldPasswrdTxt" data-bind="value:OldPassword" class="form-control" />
+                            <span id="oldPasswrdTxtErr" style="font-size:12px;color:red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPasswrdTxt">New Password</label>
+                            <input type="password" id="newPasswrdTxt" data-bind="value:NewPassword" class="form-control" />
+                            <span id="newPasswrdTxtErr" style="font-size:12px;color:red;"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPasswrdTxt">Confirm Password</label>
+                            <input type="password" id="confirmPasswrdTxt" data-bind="value:ConfirmPassword" class="form-control" />
+                            <span id="confirmPasswrdTxtErr" style="font-size:12px;color:red;"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6">
+                                    <button class="btn btn-success" style="margin-right: 5px" data-bind="click:UpdatePassword"><i class='zmdi zmdi-check-circle-u zmdi-hc-fw'></i>Update</button>
+                                    <button class="btn btn-primary" style="margin-right: 5px"><i class='zmdi zmdi-close-circle-o zmdi-hc-fw'></i>Clear</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+</div>
+<script>
+    var UserID = '@Session["UserID"]';
+    var UserName = '@Session["UserName"]';
+    var CategoryID = '@Session["CategoryID"]';
+
+    var SignupViewModel = function () {
+        var self = this;
+
+        //change password start
+        self.OldPassword = ko.observable("");
+        self.NewPassword = ko.observable("");
+        self.ConfirmPassword = ko.observable("");
+
+        self.UpdatePassword = function () {
+
+            if (self.OldPassword() == '') {
+                $('#oldPasswrdTxtErr').text('Enter the Old Password');
+            }
+            else if (self.NewPassword() == '') {
+                $('#oldPasswrdTxtErr').text('');
+                $('#newPasswrdTxtErr').text('Enter the New Ppassword');
+            }
+            else if (self.ConfirmPassword() == '') {
+                $('#newPasswrdTxtErr').text('');
+                $('#confirmPasswrdTxtErr').text('Enter the Confirm Password')
+            }
+            else if (self.ConfirmPassword() != self.NewPassword()) {
+                $('#confirmPasswrdTxtErr').text('New Password and Confirm Password not matching')
+            }
+            else {
+                var PData = {
+
+                    Password: self.OldPassword ,
+                    NewPassword: self.NewPassword
+                //UserId: UserID
+                };
+                //Ajax call to Insert the customer
+                var ur = '@Url.Action("Logout", "Account")';
+                $.ajax({
+                    type: "POST",
+                    //url: "/Account/UpdatePassword",
+                    url: '@Url.Action("UpdatePassword", "Account")',
+                    data: ko.toJSON(PData), //Convert the Observable Data into JSON
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data == 'success') {
+                            window.location.replace(ur);
+                            alert('password changed successfully');
+                        }
+                        else {
+                            alert('Old password is wrong');
+                        }
+
+                    },
+                    error: function () {
+                        alert("Invalid password");
+                    }
+                });
+            }
+
+        }
+    };
+    ko.applyBindings(new SignupViewModel());
+</script>
+
+
+
+

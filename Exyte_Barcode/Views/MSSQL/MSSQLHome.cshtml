@@ -1,0 +1,648 @@
+﻿
+@{
+    ViewBag.Title = "MSSQLHome";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<br />
+<div class="gx-container">
+    <div class="gx-main-container">
+        <div class="gx-main-content">
+            <!--gx-wrapper-->
+            <div class="gx-wrapper">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <h2 class="title mb-3 mb-sm-0">
+                                MS-SQL
+                            </h2>
+                            <nav class="mb-0 breadcrumb">
+                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
+                            </nav>
+                        </div>
+                        <div class="gx-card">                            
+                            <div class="gx-card-body collapse show" id="collapseOne">
+                                <form id="rootwizard-2" class="form-wizard validate-form-wizard validate">
+                                    <div class="wizard-navbar">
+                                        <ul>
+                                            <li class="active"><a class="active show" href="#tab2-1" data-toggle="tab"><span class="wz-number">1</span> <span class="wz-label">DB Connection</span></a></li>
+                                            <li><a href="#tab2-2" data-toggle="tab"><span class="wz-number">2</span> <span class="wz-label">Table Filter</span></a></li>
+                                            <li><a href="#tab2-3" data-toggle="tab"><span class="wz-number">3</span> <span class="wz-label">Encrypt/Decrypt</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-content">
+                                        <div class="tab-pane  active" id="tab2-1">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="serverName" class="control-label">Server</label>
+                                                        <input placeholder="Server" type="text" class="form-control required" name="serverName" id="serverName">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="userName" class="control-label">Username</label>
+                                                        <input placeholder="username" type="text" class="form-control required" name="userName" id="userName">
+                                                        <span id="userNameErr" style="font-size:12px;color:red;"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="password" class="control-label">Password</label>
+                                                        <input placeholder="password" type="password" class="form-control required" name="password" id="password">
+                                                        <span id="PasswordErr" style="font-size:12px;color:red;"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="prefixName" class="control-label">Prefix database</label>
+                                                        <input placeholder="Prefix" type="text" class="form-control" name="prefixName" id="prefixName">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <input type="checkbox" name="Windows" id="Windows" value="windows" /> Windows Authentication?
+                                                        @*<button class="btn btn-primary" onclick="LoadDatabases()">Load Databases</button>*@
+                                                        <img src="~/images/spin-icon-2.gif" id="loadIcon" style="width:25px;height:25px;" />
+                                                        <span id="connectErr" style="font-size:12px;color:red;"></span>
+                                                        <span id="connectSuccess" style="font-size:12px;color:green;"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab2-2">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="Databases" class="control-label">Select Database</label>
+                                                        <select class="form-control" id="Databases" onchange="LoadTables()"><option value="choose">choose</option></select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="emailfield" class="control-label">Select Table</label>
+                                                        <select class="form-control" id="Tables" onchange="LoadColumns()"><option value="choose">choose</option></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tab2-3">
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="AvailableDpdwnlist" class="control-label">Available Columns</label>
+                                                        <select class="form-control" style="height:200px;width:220px;" multiple id="AvailableDpdwnlist"><option></option></select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <br /><br /><br />
+                                                    <a class="btn btn-primary" id="forwardToSelectDrpdwn" onclick="forwardToSelectDrpdwn()">>></a><br /><br />
+                                                    <a class="btn btn-primary" id="DisSelectDrpdwn" onclick="DisSelectDrpdwn()"><<</a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="SelectedDpdwnlist" class="control-label">Selected Columns</label>
+                                                        <select class="form-control" style="height:200px;width:220px" multiple id="SelectedDpdwnlist"><option></option></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <input type="checkbox" id="encrypt" /> Encrypt    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="decrypt" /> Decrypt
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+                                                        <span id="checkboxErr" style="color:red;font-size:12px;"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2"></div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <a class="btn btn-primary" onclick="EncryptDecrypt()">Run</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ul class="pager wizard">
+                                            <li class="previous"><a href="javascript:void(0)"><i class="icon-left-open"></i>Previous</a></li>
+                                            <li class="next" id="loadButton"><a href="javascript:void(0)" onclick="LoadDatabases()">Next<i class="icon-right-open"></i></a> </li>
+                                            <li class="next" id="nextbutton"><a href="javascript:void(0)">Next<i class="icon-right-open"></i></a> </li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            <h2 class="title mb-3 mb-sm-0">
+                                Table Filter
+                            </h2>
+                            <nav class="mb-0 breadcrumb">
+                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
+                            </nav>
+                        </div>
+                        <div class="gx-card">                            
+                            <div class="gx-card-body collapse" id="collapseTwo">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="columns" class="control-label">Select Column</label>
+                                            <select class="form-control" id="columns"><option value="choose">choose</option></select>
+                                            <span id="columnErr" style="color:red;font-size:12px;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="wildCards" class="control-label">Select Filter</label>
+                                            <select class="form-control" id="wildCards">
+                                                <option value="start">Start with</option>
+                                                <option value="end">End with</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="searchText" class="control-label">Search Content</label>
+                                            <input type="text" class="form-control" id="searchText" />
+                                            <span id="SearchErr" style="color:red;font-size:12px;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <br />
+                                            <button class="btn btn-primary" onclick="SearchColumnData()">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="table-responsive" style="height: 170px;">
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
+                    <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                            <h2 class="title mb-3 mb-sm-0">
+                                Table
+                            </h2>
+                            <nav class="mb-0 breadcrumb">
+                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
+                            </nav>
+                        </div>
+                        <div class="gx-card">                            
+                            <div class="gx-card-body collapse show" id="collapseThree">
+                                <div class="table-responsive" style="height: 170px;">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
+                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
+                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+
+    $('#tab2-3').submit(function (event) {
+        event.preventDefault();
+    });
+    $('#nextbutton').hide();
+    $('#loadIcon').hide();
+    $('#Windows').val($(this).is(':checked'));
+
+    $('#Windows').change(function () {
+        if (!$(this).is(':checked')) {
+            $('#userName').attr('disabled', false);
+            $('#password').attr('disabled', false);
+        }
+        else {
+            $('#userName').val('');
+            $('#password').val('');
+            $('#userName').attr('disabled', true);
+            $('#password').attr('disabled', true);
+        }
+
+    });
+
+    $('#encrypt').change(function () {
+        $('#decrypt').prop('checked', false);
+    });
+    $('#decrypt').change(function () {
+        $('#encrypt').prop('checked', false);
+    });
+
+    $('#Windows').click(function () {
+        if (!$(this).is(':checked')) {
+            //return confirm("Are you sure?");
+
+        }
+    });
+
+    $("#defaultOpen").css("color", "gray");
+    $("#defaultOpen").css("background-color", "white");
+
+    function LoadDatabases() {
+        $('#userNameErr').text('');
+        $('#PasswordErr').text('');
+        $('#serverErr').text('');
+        $('#connectErr').text('');
+        $('#connectSuccess').text('');
+        var dataSource = $('#serverName').val();
+        var UserName = $('#userName').val();
+        var Password = $('#password').val();
+        var prefixName = $('#prefixName').val();
+        var auth = $("#Windows").is(":checked") ? "true" : "false";
+        if (dataSource == undefined || dataSource == "") {
+            $('#serverErr').text('Please enter the server Name');
+        }
+        else if (auth == "false" && (UserName == '' || Password == '')) {
+            $('#userNameErr').text('Enter the UserName');
+            $('#PasswordErr').text('Enter the Password');
+        }
+        else {
+            $('#loadIcon').show();
+            Data = {
+                DataSource: dataSource,
+                UserName: UserName,
+                Password: Password,
+                DataBase: prefixName
+            }
+            $.ajax({
+                type: "POST",
+                //url: "/MSSQL/GetDatabases",
+                url:'@Url.Action("GetDatabases", "MSSQL")',
+                data: ko.toJSON(Data),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data[0] == 'failed') {
+                        alert('failed to connect');
+                        $('#loadIcon').hide();
+                        $('#connectErr').text('Failed to Connect Server');
+                    }
+                    else {
+                        $('#loadIcon').hide();
+                        $('#connectSuccess').text('Server Connected');
+                        $('#Databases').empty();
+                        var option = '';
+                        for (var i = 0; i < data.length; i++) {
+                            option += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                        }
+                        $('#Databases').append(option);
+                        var option1 = '<option value="choose" selected>choose </option>';
+                        $('#Databases').append(option1);
+                        $('#loadButton').hide();
+                        $('#nextbutton').show();
+                    }
+
+
+                },
+                error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                }
+            });
+        }
+    }
+
+    function LoadTables() {
+
+        var dbName = $('#Databases').val();
+        cData = {
+            DataBase: dbName
+        }
+        $.ajax({
+            type: "POST",
+            //url: "/MSSQL/GetTables",
+            url:'@Url.Action("GetTables", "MSSQL")',
+            data: ko.toJSON(cData),
+            contentType: "application/json",
+            success: function (data) {
+                $('#Tables').empty();
+                var option = '';
+                for (var i = 0; i < data.length; i++) {
+                    option += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                }
+                $('#Tables').append(option);
+                var option1 = '<option value="choose" selected>choose </option>';
+                $('#Tables').append(option1);
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
+
+
+
+    }
+
+    function loadData() {
+        var TableName = $('#Tables').val();
+        var dbName = $('#Databases').val();
+
+        $.ajax({
+            type: "GET",
+            //url: "/MSSQL/GetTableRecords",
+            url:'@Url.Action("GetTableRecords", "MSSQL")',
+            data: {
+                'dataBase': dbName,
+                'TableName': TableName
+            },
+            contentType: "application/json",
+            success: function (data) {
+                $("#userTable").empty();
+                var response = JSON.parse(data);
+                var head = "<thead class='thead-inverse'><tr>";
+                $.each(response[0], function (k, v) {
+                    head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                })
+                head = head + "</thead></tr>";
+
+                $("#userTable ").append(head);
+                var body = "<tbody><tr>";
+                $.each(response, function (index, value) {
+                    body = body + "<tr>";
+                    $.each(value, function (key, val) {
+                        body = body + "<td>" + val + "</td>";
+                    })
+                    body = body + "</tr>";
+                })
+                body = body + "</tbody>";
+                $("#HashTable").hide();
+                $("#SearchTable").hide();
+                $("#userTable").append(body);//append body
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
+    }
+
+    var cols = new Array();
+
+    function LoadColumns() {
+        if ($('#Tables').val() == "choose") {
+            alert('Please select the Table');
+            $('#columns').val('choose');
+            $('#searchText').val('');
+            $('#SelectedDpdwnlist').empty();
+        }
+        else {
+            var TableName = $('#Tables').val();
+            var dbName = $('#Databases').val();
+
+            $.ajax({
+                type: "GET",
+                //url: "/MSSQL/GetColumns",
+                url:'@Url.Action("GetColumns", "MSSQL")',
+                data: {
+                    'dataBase': dbName,
+                    'TableName': TableName
+                },
+                contentType: "application/json",
+                success: function (data) {
+                    $('#columns').empty();
+                    var option = '';
+                    for (var i = 0; i < data.length; i++) {
+                        option += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                    }
+                    $("#userTable").show();
+                    $("#SearchTable").hide();
+                    $('#columns').append(option);
+                    var option1 = '<option value="choose" selected>choose </option>';
+                    $('#columns').append(option1);
+                    $("#columns option[value='PnPID']").remove();
+                    $('#AvailableDpdwnlist').empty();
+                    $('#AvailableDpdwnlist').append(option);
+                    $('#SelectedDpdwnlist').empty();
+                    cols = [];
+                    cols = data;
+                    $("#AvailableDpdwnlist option[value='PnPID']").remove();
+
+                    $('#searchText').val('');
+                },
+                error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                }
+            });
+
+            loadData();
+        }
+    }
+
+    function SearchColumnData() {
+        $('#columnErr').text('');
+        $('#SearchErr').text('');
+        if ($('#columns').val() == "choose") {
+            $('#columnErr').text('Please Select the column');
+        } else
+            if ($('#searchText').val() == "") {
+                $('#SearchErr').text('Please enter search text');
+            }
+            else {
+                var TableName = $('#Tables').val();
+                var dbName = $('#Databases').val();
+                var columnName = $('#columns').val();
+                var wildcard = $('#wildCards').val();
+                var searchText = $('#searchText').val();
+                Data = {
+                    DataBase: dbName,
+                    TableName: TableName,
+                    ColumnName: columnName,
+                    Wildcard: wildcard,
+                    SearchText: searchText
+                }
+                $.ajax({
+                    type: "POST",
+                    //url: "/MSSQL/GetColumnFiterTableData",
+                    url:'@Url.Action("GetColumnFiterTableData", "MSSQL")',
+                    data: ko.toJSON(Data),
+                    contentType: "application/json",
+                    success: function (data) {
+                        $("#SearchTable").empty();
+                        var response = JSON.parse(data);
+                        var head = "<thead class='thead-inverse'><tr>";
+                        $.each(response[0], function (k, v) {
+                            head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                        })
+                        head = head + "</thead></tr>";
+
+                        $("#SearchTable ").append(head);
+                        var body = "<tbody><tr>";
+                        $.each(response, function (index, value) {
+                            body = body + "<tr>";
+                            $.each(value, function (key, val) {
+                                body = body + "<td>" + val + "</td>";
+                            })
+                            body = body + "</tr>";
+                        })
+                        body = body + "</tbody>";
+                        $("#userTable").hide();
+                        $("#SearchTable").show();
+                        $("#SearchTable").append(body);//append body
+                    },
+                    error: function (error) {
+                        alert(error.status + " " + error.statusText);
+                    }
+                });
+            }
+
+    }
+
+    function forwardToSelectDrpdwn() {
+        //$('#SelectedDpdwnlist').empty();
+        var availDdp = $('#AvailableDpdwnlist').val();
+        var option = "";
+        for (var i = 0; i < availDdp.length; i++) {
+            option += '<option selected value="' + availDdp[i] + '">' + availDdp[i] + '</option>';
+            $("#AvailableDpdwnlist option[value='" + availDdp[i] + "']").remove();
+        }
+        $('#SelectedDpdwnlist').append(option);
+    }
+
+    function DisSelectDrpdwn() {
+        var selectedDdp = $('#SelectedDpdwnlist').val();
+        var option = "";
+        for (var i = 0; i < selectedDdp.length; i++) {
+            option += '<option value="' + selectedDdp[i] + '">' + selectedDdp[i] + '</option>';
+            $("#SelectedDpdwnlist option[value='" + selectedDdp[i] + "']").remove();
+        }
+        $('#AvailableDpdwnlist').append(option);
+    }
+
+    function EncryptDecrypt() {
+        var aa = $('#encrypt').val();
+        var pnpid = cols.indexOf("PnPID");
+        var options = $('#SelectedDpdwnlist option');
+        if (options.length == 0) {
+            $('#checkboxErr').text('Please select the minimum one column');
+        } else
+            if (!($('#encrypt').is(":checked")) && !($('#decrypt').is(":checked"))) {
+                $('#checkboxErr').text('Please check the checkbox which you want prefer');
+            }
+            else
+                if (pnpid == -1) {
+                    $('#checkboxErr').text('PnPID Column is Not Available for this table choose different one');
+                }
+                else {
+
+                    var options = $('#SelectedDpdwnlist option');
+                    var selectedDdp = $.map(options, function (option) {
+                        return option.value;
+                    });
+                    var TableName = $('#Tables').val();
+                    var dbName = $('#Databases').val();
+                    if ($('#encrypt').is(":checked")) {
+                        var hashName = 'Encrypt';
+                    }
+                    else {
+                        var hashName = 'Decrypt';
+                    }
+                    Data = {
+                        DataBase: dbName,
+                        TableName: TableName,
+                        ColumnNames: selectedDdp,
+                        CryptName: hashName
+                    }
+                    $.ajax({
+                        type: "POST",
+                        //url: "/MSSQL/EncryptOrDecryptColumnData",
+                        url:'@Url.Action("EncryptOrDecryptColumnData", "MSSQL")',
+                        data: ko.toJSON(Data),
+                        contentType: "application/json",
+                        success: function (data) {
+                            $("#HashTable").empty();
+                            var response = JSON.parse(data);
+                            var head = "<thead class='thead-inverse'><tr>";
+                            $.each(response[0], function (k, v) {
+                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                            })
+                            head = head + "</thead></tr>";
+
+                            $("#HashTable ").append(head);
+                            var body = "<tbody><tr>";
+                            $.each(response, function (index, value) {
+                                body = body + "<tr>";
+                                $.each(value, function (key, val) {
+                                    body = body + "<td>" + val + "</td>";
+                                })
+                                body = body + "</tr>";
+                            })
+                            body = body + "</tbody>";
+                            $("#userTable").hide();
+                            $("#SearchTable").hide();
+                            $("#HashTable").show();
+                            $("#HashTable").append(body);//append body
+                        },
+                        error: function (error) {
+                            alert(error.status + " " + error.statusText);
+                        }
+                    });
+                }
+
+    }
+
+    function changeToTableFilter() {
+        $("#tableFilter").css("color", "gray");
+        $("#tableFilter").css("background-color", "white");
+        $("#defaultOpen").css("background-color", "#f1f1f1");
+        $("#defaultOpen").css("color", "cornflowerblue");
+        $("#dbFilter").css("background-color", "#f1f1f1");
+        $("#dbFilter").css("color", "cornflowerblue");
+
+    }
+
+    function changeToColumnFilter() {
+        $("#tableFilter").css("color", "cornflowerblue");
+        $("#tableFilter").css("background-color", "#f1f1f1");
+        $("#defaultOpen").css("background-color", "#f1f1f1");
+        $("#defaultOpen").css("color", "cornflowerblue");
+        $("#dbFilter").css("color", "gray");
+        $("#dbFilter").css("background-color", "white");
+
+    }
+
+    function BackToDbFilter() {
+        $("#tableFilter").css("background-color", "#f1f1f1");
+        $("#tableFilter").css("color", "cornflowerblue");
+        $("#defaultOpen").css("color", "gray");
+        $("#defaultOpen").css("background-color", "white");
+        $("#dbFilter").css("background-color", "#f1f1f1");
+        $("#dbFilter").css("color", "cornflowerblue");
+
+    }
+
+</script>
+

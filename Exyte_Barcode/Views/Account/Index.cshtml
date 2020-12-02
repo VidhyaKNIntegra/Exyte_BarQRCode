@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="gx-card">
+                <div class="gx-card-header">
+                    <a class="site-logo" href="#">
+                        <img src="~/images/exyte_RGB.png" alt="Jumbo" title="Jumbo">
+                    </a>
+                    <h3>Login</h3>
+                </div>
+                <div class="gx-card-body">
+                    
+                    <form>
+                        <div class="form-group">
+                            <input type="text" class="form-control" onkeydown="handleEnter1(event)" placeholder="Email" id="EmailTxt" />
+                            <span id="EmailTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" onkeydown="handleEnter(event)" class="form-control" placeholder="Password" id="passwordTxt" />
+                            <span id="passwordTxtErr" style="color:red;font-size:12px;"></span>
+                        </div>
+                        <input type="button" id="readBtn" class="btn btn-primary" onclick="Login()" value="Login" />
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<script>
+    function handleEnter1(e) {        
+        if (e.keyCode === 13) {            
+            Login()
+        }
+    }
+    function handleEnter(e) {
+        if(e.keyCode === 13){
+            Login()
+        }
+    }
+
+    function Login() {
+        
+        $('#EmailTxtErr').text('');
+        $('#passwordTxtErr').text('');
+        var email_regex = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+        if ($('#EmailTxt').val() == '' && $('#passwordTxt').val() == '') { $('#EmailTxtErr').text('Enter the Email'); $('#passwordTxtErr').text('Enter the password'); }else
+        if ($('#EmailTxt').val() == '') {
+            $('#EmailTxtErr').text('Enter the Email');
+        }
+        else
+            if (!email_regex.test($('#EmailTxt').val())) {
+                $('#EmailTxtErr').text('Enter valid the Email');
+            } else if ($('#passwordTxt').val() == '') { $('#passwordTxtErr').text('Enter the password'); }
+            else {
+                $('#readBtn').attr('disabled', true);
+                var Data = {
+                    Email: $('#EmailTxt').val(),
+                    Password: $('#passwordTxt').val()
+                };
+                //Ajax call to Insert the customer
+                $.ajax({
+                    type: "POST",                    
+                    url: '@Url.Action("LoginUser", "Account")',
+                    data: ko.toJSON(Data), //Convert the Observable Data into JSON
+                    contentType: "application/json",
+                    success: function (data) {
+                        //console.log(data);
+                        @*var aa =@Url.Content("~" + Session["URL"]);
+                        console.log(aa);*@
+                        if (data != "failed") {
+                            window.location.href=data;
+                            // window.location.replace(data);
+                        }
+                           
+                        else {
+                            alert("Invalid email or password");
+                            $('#readBtn').attr('disabled', false);
+                        }
+                            
+                    },
+                    error: function () {
+                        alert("Invalid email or password");
+                        $('#readBtn').attr('disabled', false);
+                    }
+                });
+            }
+    }
+</script>
+
+
+

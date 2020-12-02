@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Jumbo - A fully responsive, HTML5 based admin theme">
+    <meta name="keywords" content="Responsive, HTML5, admin theme, business, professional, jQuery, web design, CSS3, sass">
+
+    <title>@ViewBag.Title - Exyte tool cost</title>
+    @Styles.Render("~/fonts/fonts")
+    @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/scrollbar")
+    @Styles.Render("~/Content/DataTable")
+    @Styles.Render("~/Content/select2")
+    @*Styles.Render("~/Content/chart")*@
+    <link rel='shortcut icon' type='image/x-icon' href='~/images/index.ico' />
+    @*<link href="~/Scripts/DataTable/jquery.dataTables.css" rel="stylesheet" />*@
+    <script src="~/Scripts/jquery/dist/jquery.min.js"></script>
+    <script src="~/Scripts/knockout-3.5.0.js"></script>
+
+</head>
+<body id="body" data-theme="dark-indigo">
+    <!-- Loader Backdrop -->
+    @*<div class="loader-backdrop">
+            <!-- Loader -->
+            <div class="loader">
+                <svg class="circular" viewBox="25 25 50 50">
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+                </svg>
+            </div>
+            <!-- /loader-->
+        </div>*@
+    <!-- loader backdrop -->
+    <!-- Page container -->
+    <div class="gx-container">
+
+        <!-- Page Sidebar -->
+        <div id="menu" class="side-nav gx-sidebar">
+            <div class="navbar-expand-lg">
+                <!-- Sidebar header  -->
+                <div class="sidebar-header" style="background: #fff;">
+                    <a class="site-logo" id="homepage" href="../Home/Index">
+                        <img src="~/images/exyte_RGB.png" alt="Jumbo" title="Jumbo">
+                    </a>
+                </div>
+                <!-- /sidebar header -->
+                <!-- Main navigation -->
+                <div id="main-menu" class="main-menu navbar-collapse collapse">
+                    @if (Session["RoleID"] != null)
+                    {
+                        Html.RenderAction("Menu", "Account");
+                    }
+                </div>
+                <!-- /main navigation -->
+            </div>
+        </div>
+        <!-- /page sidebar -->
+        <!-- Main Container -->
+        <div class="gx-main-container">
+            <header class="main-header">
+                <div class="gx-toolbar" style="background-color:#9c9da0;min-height:10px">
+                    <div class="sidebar-mobile-menu d-block d-lg-none">
+                        <a class="gx-menu-icon menu-toggle" href="#menu">
+                            <span class="menu-icon"></span>
+                        </a>
+                    </div>
+                </div>
+            </header>          
+            <!-- /main header -->
+            <!-- Main Content -->
+            <div class="gx-main-content">
+                <!--gx-wrapper-->
+                <div class="gx-wrapper">
+                    <div class="dashboard animated slideInUpTiny animation-duration-3">
+                        @RenderBody()
+                    </div>
+                </div>
+                <!--/gx-wrapper-->
+                <!-- Footer -->
+                <footer class="gx-footer">
+                    <div class="d-flex flex-row justify-content-between">
+                        <p> Copyright Exyte © 2020</p>
+                    </div>
+                </footer>
+                <!-- /footer -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /main container -->
+        <!-- Theme Options Button -->
+        <!-- <div id="colorTheme" class="theme-option">
+            <a href="javascript:void(0)" class="action-btn">
+                <i class="zmdi zmdi-settings zmdi-hc-spin text-white"></i>
+            </a>
+        </div> -->
+        <!-- /Theme Options Button -->
+
+
+    </div>
+    <!-- /page container -->
+   
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/scrollbar")
+    @Scripts.Render("~/bundles/slide")
+
+    @Scripts.Render("~/bundles/DataTable")
+    @Scripts.Render("~/bundles/jqueryWizardMin")
+    @Scripts.Render("~/bundles/jqueryValidateMin")
+    @Scripts.Render("~/bundles/functions")
+    @Scripts.Render("~/bundles/formWizard")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/sweetAlert")
+    @RenderSection("scripts", required: false)
+    <script>
+        var url = '@Session["URL"]';
+        $(document).ready(function () {
+            $('#homepage').attr("href", '..'+url);
+        });
+    </script>
+</body>
+</html>

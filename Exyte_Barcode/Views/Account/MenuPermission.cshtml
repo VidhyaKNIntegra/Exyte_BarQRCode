@@ -1,0 +1,65 @@
+﻿
+@{ ViewBag.Title = "MenuPermission";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+<style>
+    #wkslist {
+        list-style-type: none;
+        padding: 0;
+    }
+</style>
+
+<div class="container">
+    <h3>Menu Perssions For user</h3>
+    <div class="gx-card">
+        <div class="gx-card-header">
+            <h3 class="card-heading">Add Permission</h3>
+        </div>
+        <div class="gx-card-body">
+            <label>Select the Role</label>
+            <select class="form-control" id="usersDropdwn"></select><br /><br />
+            <ul id="wkslist"></ul>
+
+            <button class="btn btn-primary">Add permission</button>
+        </div>
+    </div>
+</div>
+
+<script>
+     var UserID = '@Session["UserID"]';
+    var UserName = '@Session["UserName"]';
+    var CategoryID = '@Session["CategoryID"]';
+
+    $.ajax({
+        type: "GET",
+        //url: "/Account/GetRoles",
+        url: '@Url.Action("GetRoles", "Account")',
+        contentType: "application/json",
+        //data: { "id": UserID },
+        success: function (data) {
+            $.each(data, function (key, value) {
+                $("#usersDropdwn").append($("<option></option>").val(value.RoleId).html(value.RoleName));
+            });
+        }
+    });
+    $.ajax({
+        type: "GET",
+        //url: "/Account/GetMenuList",
+        url: '@Url.Action("GetMenuList", "Account")',
+        contentType: "application/json",
+        success: function (data) {
+            $.each(data, function (key, value) {
+                var li = $('<li><input type="checkbox" name="' + value.MenuName + '" id="' + value.MenuId + '"/>' +
+                    '<label for="' + value.MenuName + '"></label></li>');
+                li.find('label').text(value.MenuName);
+                $('#wkslist').append(li);
+            });
+        }
+    });
+    //var response = { optionA: 'One', optionB: 'Two', optionC: 'Three' };
+    //$.each(response, function (key, value) {
+    //    var li = $('<li><input type="checkbox" name="' + key + '" id="' + key + '"/>' +
+    //        '<label for="' + key + '"></label></li>');
+    //    li.find('label').text(value);
+    //    $('#wkslist').append(li);
+    //});
+</script>

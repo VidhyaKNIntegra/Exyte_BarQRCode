@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Exyte.Models.MenuItems>
+@{
+    Layout = null;
+}
+@*<div>*@
+    <ul class="nav-menu">
+        
+        @{foreach (var item in Model.Where(s => s.ParentMenu == null).GroupBy(Obj => new { Obj.MenuId }).Distinct().ToList())
+            {
+                <li class="menu no-arrow">
+                    @if (item.FirstOrDefault().Url == "#")
+                    {
+                        <a href="javascript:void(0)">
+                            <i class="@item.FirstOrDefault().MenuClass"></i>
+                            <span class="nav-text">@item.FirstOrDefault().MenuName</span>
+
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="../@item.FirstOrDefault().Url">
+                            <i class="@item.FirstOrDefault().MenuClass"></i>
+                            <span class="nav-text">@item.FirstOrDefault().MenuName</span>
+
+                        </a>
+                    }
+                    <ul class="sub-menu">
+                        @{foreach (var firstItem in (Model.Where(s => s.ParentMenu == item.FirstOrDefault().MenuId).ToList()))
+                            {
+                                <li>
+                                    @if (firstItem.Url == "#")
+                                    {
+                                        <a href="javascript:void(0)">
+                                            <span class="nav-text">@firstItem.MenuName</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="../@firstItem.Url">
+                                            <span class="nav-text">@firstItem.MenuName</span>
+                                        </a>
+                                    }
+                                </li>
+
+                            }
+                        }
+                    </ul>
+                </li>
+
+            }
+        }
+        <li class="menu no-arrow">
+            <a class="dropdown-item" href="../Account/Settings">
+                <i class="zmdi zmdi-pin-account zmdi-hc-fw mr-2"></i>
+                Change Password
+            </a>
+        </li>
+        <li class="menu no-arrow">
+            <a class="dropdown-item" href="../Account/Logout">
+                <i class="zmdi zmdi-sign-in zmdi-hc-fw mr-2"></i>
+                Logout
+            </a>
+        </li>
+    </ul>
+@*</div>*@
+
+        

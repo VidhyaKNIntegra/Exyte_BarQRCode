@@ -11,6 +11,6 @@ Exyte.Provider/bin/Release/*
 Exyte.Provider/obj/*
 Exyte.Models/bin/*
 Exyte.Models/obj/*
-bin/*
-log/webLogs.log
+Exyte_Barcode/bin/*
+Exyte_Barcode/obj/*
 

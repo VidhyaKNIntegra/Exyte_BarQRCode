@@ -1,0 +1,79 @@
+﻿
+@{ ViewBag.Title = "EngineerDashBoard";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Projects</strong></h3>
+                    <br />
+                    <div class="row">
+
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 style="color:green;">Projects </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 id="ActiveProjects"></h4>
+                            <div class="text-right">
+                                <a href="../Projects/Projects"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Reload Data</strong></h3>
+                    <br />
+                    <div class="row" style="padding:4px;">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-10">
+                            <span>Reload project data</span>
+                            <br />
+                            <div class="text-right">
+                                <a href="../Projects/RefreshProject">
+                                    <i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
+
+<script>
+    $.ajax({
+        type: "GET",
+        //url: "/Account/EngineerDashboardDetails",
+        url: '@Url.Action("EngineerDashboardDetails", "Account")',
+        contentType: "application/json",
+        success: function (data) {
+            $('#ActiveProjects').text(data.ActiveProjects);
+        }
+    });
+
+</script>
+

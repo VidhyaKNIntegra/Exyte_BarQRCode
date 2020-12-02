@@ -1,0 +1,114 @@
+﻿
+@{ ViewBag.Title = "AdminDashBoard";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<br />
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Users</strong></h3>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 style="color:green;">Active </h4>
+                            <h4 style="color:#b77909;">InActive </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 id="ActiveUsers"></h4>
+                            <h4 id="InActiveUsers"></h4>
+                            <div class="text-right" style="color:white">
+                                <a href="../Account/Users"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Roles</strong></h3>
+                    <br />
+                    <div class="row">
+
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 style="color:green;">Active </h4>
+                            <h4 style="color:#b77909;">InActive </h4>
+                        </div>
+                        <div class="col-sm-5">
+                            <h4 id="ActiveRoles"></h4>
+                            <h4 id="InActiveRoles"></h4>
+                            <div class="text-right" style="color:white">
+                                <a href="../Account/Roles"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="gx-card net-chart bg-info">
+                <div class="gx-card-thumb">
+                    <img class="img-fluid" src="~/images/80x100.png" alt="light">
+                </div>
+                <div class="gx-card-body text-white br-break">
+                    <h3 class="mb-0"><strong>Reports</strong></h3>
+                    <div class="row" style="padding:30px">
+                        <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-10">
+                            <span>View more reports</span>
+                            <br />
+                            <div class="text-right">
+                                <a href="../Reports/ValveList"><i class="zmdi zmdi-forward zmdi-hc-fw" style="color:white"></i></a>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $.ajax({
+        type: "GET",
+        //url: "/Account/AdminDashboardDetails",
+        url: '@Url.Action("AdminDashboardDetails", "Account")',
+        contentType: "application/json",
+        success: function (data) {
+            $('#ActiveUsers').text(data.ActiveUsers);
+            $('#InActiveUsers').text(data.InActiveUsers);
+            $('#ActiveRoles').text(data.ActiveRoles);
+            $('#InActiveRoles').text(data.InActiveRoles);
+        }
+    });
+
+</script>
+
