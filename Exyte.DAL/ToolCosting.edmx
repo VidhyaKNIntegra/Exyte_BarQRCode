@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ToolCostingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MenuList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ParentMenu" Type="bigint" />
+          <Property Name="Url" Type="nvarchar" MaxLength="250" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="MenuClass" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="MenuRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MenuId" Type="bigint" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="Created_On" Type="datetime" />
+          <Property Name="Created_By" Type="int" />
+        </EntityType>
+        <EntityType Name="OperationAudit">
+          <Key>
+            <PropertyRef Name="Sno" />
+          </Key>
+          <Property Name="Sno" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AuditId" Type="bigint" Nullable="false" />
+          <Property Name="Opertaion" Type="nvarchar" MaxLength="2000" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="RoleDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="Is_Active" Type="bit" Nullable="false" />
+          <Property Name="Created_On" Type="datetime" Nullable="false" />
+          <Property Name="Created_By" Type="int" />
+          <Property Name="Modified_On" Type="datetime" />
+          <Property Name="Modified_By" Type="int" />
+        </EntityType>
+        <EntityType Name="UserAudit">
+          <Key>
+            <PropertyRef Name="Sno" />
+          </Key>
+          <Property Name="Sno" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="IsLogin" Type="bit" Nullable="false" />
+          <Property Name="LoginOn" Type="datetime" />
+          <Property Name="LogoutOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="Password" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="IsPasswordChanged" Type="bit" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="datetime" />
+          <Property Name="ModifiedBy" Type="int" />
+        </EntityType>
+        <Association Name="FK__Menu_Perm__MenuI__571DF1D5">
+          <End Role="MenuList" Type="Self.MenuList" Multiplicity="1" />
+          <End Role="MenuRole" Type="Self.MenuRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenuList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MenuRole">
+              <PropertyRef Name="MenuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Menu_Perm__RoleI__5CD6CB2B">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="MenuRole" Type="Self.MenuRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="MenuRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Operation__Audit__412EB0B6">
+          <End Role="UserAudit" Type="Self.UserAudit" Multiplicity="1" />
+          <End Role="OperationAudit" Type="Self.OperationAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAudit">
+              <PropertyRef Name="Sno" />
+            </Principal>
+            <Dependent Role="OperationAudit">
+              <PropertyRef Name="AuditId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_Mast__RoleI__267ABA7A">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserAudit__UserI__3D5E1FD2">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserAudit" Type="Self.UserAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserAudit">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ToolCostingModelStoreContainer">
+          <EntitySet Name="MenuList" EntityType="Self.MenuList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MenuRole" EntityType="Self.MenuRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OperationAudit" EntityType="Self.OperationAudit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAudit" EntityType="Self.UserAudit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Menu_Perm__MenuI__571DF1D5" Association="Self.FK__Menu_Perm__MenuI__571DF1D5">
+            <End Role="MenuList" EntitySet="MenuList" />
+            <End Role="MenuRole" EntitySet="MenuRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Menu_Perm__RoleI__5CD6CB2B" Association="Self.FK__Menu_Perm__RoleI__5CD6CB2B">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="MenuRole" EntitySet="MenuRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Operation__Audit__412EB0B6" Association="Self.FK__Operation__Audit__412EB0B6">
+            <End Role="UserAudit" EntitySet="UserAudit" />
+            <End Role="OperationAudit" EntitySet="OperationAudit" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_Mast__RoleI__267ABA7A" Association="Self.FK__User_Mast__RoleI__267ABA7A">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserAudit__UserI__3D5E1FD2" Association="Self.FK__UserAudit__UserI__3D5E1FD2">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserAudit" EntitySet="UserAudit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ToolCostingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MenuList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ParentMenu" Type="Int64" />
+          <Property Name="Url" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="MenuClass" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MenuRoles" Relationship="Self.FK__Menu_Perm__MenuI__571DF1D5" FromRole="MenuList" ToRole="MenuRole" />
+        </EntityType>
+        <EntityType Name="MenuRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MenuId" Type="Int64" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="Created_On" Type="DateTime" Precision="3" />
+          <Property Name="Created_By" Type="Int32" />
+          <NavigationProperty Name="MenuList" Relationship="Self.FK__Menu_Perm__MenuI__571DF1D5" FromRole="MenuRole" ToRole="MenuList" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__Menu_Perm__RoleI__5CD6CB2B" FromRole="MenuRole" ToRole="Roles" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Is_Active" Type="Boolean" Nullable="false" />
+          <Property Name="Created_On" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Created_By" Type="Int32" />
+          <Property Name="Modified_On" Type="DateTime" Precision="3" />
+          <Property Name="Modified_By" Type="Int32" />
+          <NavigationProperty Name="MenuRoles" Relationship="Self.FK__Menu_Perm__RoleI__5CD6CB2B" FromRole="Roles" ToRole="MenuRole" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__User_Mast__RoleI__267ABA7A" FromRole="Roles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="UserAudit">
+          <Key>
+            <PropertyRef Name="Sno" />
+          </Key>
+          <Property Name="Sno" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="IsLogin" Type="Boolean" Nullable="false" />
+          <Property Name="LoginOn" Type="DateTime" Precision="3" />
+          <Property Name="LogoutOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK__UserAudit__UserI__3D5E1FD2" FromRole="UserAudit" ToRole="Users" />
+          <NavigationProperty Name="OperationAudits" Relationship="ToolCostingModel.FK__Operation__Audit__412EB0B6" FromRole="UserAudit" ToRole="OperationAudit" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="IsPasswordChanged" Type="Boolean" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <NavigationProperty Name="Role" Relationship="Self.FK__User_Mast__RoleI__267ABA7A" FromRole="Users" ToRole="Roles" />
+          <NavigationProperty Name="UserAudits" Relationship="Self.FK__UserAudit__UserI__3D5E1FD2" FromRole="Users" ToRole="UserAudit" />
+        </EntityType>
+        <Association Name="FK__Menu_Perm__MenuI__571DF1D5">
+          <End Role="MenuList" Type="Self.MenuList" Multiplicity="1" />
+          <End Role="MenuRole" Type="Self.MenuRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MenuList">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MenuRole">
+              <PropertyRef Name="MenuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Menu_Perm__RoleI__5CD6CB2B">
+          <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+          <End Role="MenuRole" Type="Self.MenuRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="MenuRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_Mast__RoleI__267ABA7A">
+          <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserAudit__UserI__3D5E1FD2">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserAudit" Type="Self.UserAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserAudit">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ToolCostingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MenuLists" EntityType="Self.MenuList" />
+          <EntitySet Name="MenuRoles" EntityType="Self.MenuRole" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="UserAudits" EntityType="Self.UserAudit" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK__Menu_Perm__MenuI__571DF1D5" Association="Self.FK__Menu_Perm__MenuI__571DF1D5">
+            <End Role="MenuList" EntitySet="MenuLists" />
+            <End Role="MenuRole" EntitySet="MenuRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Menu_Perm__RoleI__5CD6CB2B" Association="Self.FK__Menu_Perm__RoleI__5CD6CB2B">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="MenuRole" EntitySet="MenuRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_Mast__RoleI__267ABA7A" Association="Self.FK__User_Mast__RoleI__267ABA7A">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserAudit__UserI__3D5E1FD2" Association="Self.FK__UserAudit__UserI__3D5E1FD2">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserAudit" EntitySet="UserAudits" />
+          </AssociationSet>
+          <EntitySet Name="OperationAudits" EntityType="ToolCostingModel.OperationAudit" />
+          <AssociationSet Name="FK__Operation__Audit__412EB0B6" Association="ToolCostingModel.FK__Operation__Audit__412EB0B6">
+            <End Role="UserAudit" EntitySet="UserAudits" />
+            <End Role="OperationAudit" EntitySet="OperationAudits" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="OperationAudit">
+          <Key>
+            <PropertyRef Name="Sno" />
+          </Key>
+          <Property Name="Sno" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AuditId" Type="Int64" Nullable="false" />
+          <Property Name="Opertaion" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="UserAudit" Relationship="ToolCostingModel.FK__Operation__Audit__412EB0B6" FromRole="OperationAudit" ToRole="UserAudit" />
+        </EntityType>
+        <Association Name="FK__Operation__Audit__412EB0B6">
+          <End Type="ToolCostingModel.UserAudit" Role="UserAudit" Multiplicity="1" />
+          <End Type="ToolCostingModel.OperationAudit" Role="OperationAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAudit">
+              <PropertyRef Name="Sno" />
+            </Principal>
+            <Dependent Role="OperationAudit">
+              <PropertyRef Name="AuditId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ToolCostingModelStoreContainer" CdmEntityContainer="ToolCostingEntities">
+          <EntitySetMapping Name="MenuLists">
+            <EntityTypeMapping TypeName="ToolCostingModel.MenuList">
+              <MappingFragment StoreEntitySet="MenuList">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MenuName" ColumnName="MenuName" />
+                <ScalarProperty Name="ParentMenu" ColumnName="ParentMenu" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="MenuClass" ColumnName="MenuClass" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MenuRoles">
+            <EntityTypeMapping TypeName="ToolCostingModel.MenuRole">
+              <MappingFragment StoreEntitySet="MenuRole">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MenuId" ColumnName="MenuId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Created_On" ColumnName="Created_On" />
+                <ScalarProperty Name="Created_By" ColumnName="Created_By" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="ToolCostingModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+                <ScalarProperty Name="Is_Active" ColumnName="Is_Active" />
+                <ScalarProperty Name="Created_On" ColumnName="Created_On" />
+                <ScalarProperty Name="Created_By" ColumnName="Created_By" />
+                <ScalarProperty Name="Modified_On" ColumnName="Modified_On" />
+                <ScalarProperty Name="Modified_By" ColumnName="Modified_By" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAudits">
+            <EntityTypeMapping TypeName="ToolCostingModel.UserAudit">
+              <MappingFragment StoreEntitySet="UserAudit">
+                <ScalarProperty Name="Sno" ColumnName="Sno" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IsLogin" ColumnName="IsLogin" />
+                <ScalarProperty Name="LoginOn" ColumnName="LoginOn" />
+                <ScalarProperty Name="LogoutOn" ColumnName="LogoutOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ToolCostingModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="IsPasswordChanged" ColumnName="IsPasswordChanged" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OperationAudits">
+            <EntityTypeMapping TypeName="ToolCostingModel.OperationAudit">
+              <MappingFragment StoreEntitySet="OperationAudit">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Opertaion" ColumnName="Opertaion" />
+                <ScalarProperty Name="AuditId" ColumnName="AuditId" />
+                <ScalarProperty Name="Sno" ColumnName="Sno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
