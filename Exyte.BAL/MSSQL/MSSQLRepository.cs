@@ -52,5 +52,11 @@ namespace Exyte.BAL.MSSQL
             return res;
         }
 
+        public DataTable GetColumnData(DatabaseDetails dbName)
+        {
+            var res = _service.GetColumnData(dbName);
+            return res;
+        }
+
     }
 }

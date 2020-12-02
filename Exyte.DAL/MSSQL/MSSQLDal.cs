@@ -365,5 +365,31 @@ namespace Exyte.DAL.MSSQL
             }
            
         }
+        public DataTable GetColumnData(DatabaseDetails dbName)
+        {
+            try
+            {                
+                string result = string.Join(",", dbName.ColumnNames);
+                
+                SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
+                con.Open();
+                SqlCommand cmd = new SqlCommand("select " + result + " from [" + dbName.DataBase + "].[dbo].[" + dbName.TableName + "]", con);
+                SqlDataReader dr = cmd.ExecuteReader();
+                DataTable dt = new DataTable();
+                if (dr.HasRows == true)
+                {
+                    dt.Load(dr);                                                     
+
+                }
+               dr.Close();
+               con.Close();
+               return dt;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw ex;
+            }
+        }
     }
 }

@@ -90,5 +90,11 @@ namespace Exyte_Barcode.Controllers
             }
             return Json((JsonConvert.SerializeObject(response)), JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetColumnData(DatabaseDetails dbname)
+        {
+            DataTable response = _repository.GetColumnData(dbname);
+            return Json((JsonConvert.SerializeObject(response)), JsonRequestBehavior.AllowGet);
+        }
     }
 }

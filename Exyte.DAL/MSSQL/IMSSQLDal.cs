@@ -16,6 +16,7 @@ namespace Exyte.DAL.MSSQL
         DataTable  GetTableRecords(string dataBase, string TableName);
         DataTable GetColumnFiterTableData(DatabaseDetails dbName);
         DataTable EncryptOrDecryptColumnData(DatabaseDetails dbName);
+        DataTable GetColumnData(DatabaseDetails dbName);
 
     }
 }

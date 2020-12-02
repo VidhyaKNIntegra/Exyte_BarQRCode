@@ -22,7 +22,7 @@
                                 <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
                             </nav>
                         </div>
-                        <div class="gx-card">                            
+                        <div class="gx-card">
                             <div class="gx-card-body collapse show" id="collapseOne">
                                 <form id="rootwizard-2" class="form-wizard validate-form-wizard validate">
                                     <div class="wizard-navbar">
@@ -117,16 +117,17 @@
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <input type="checkbox" id="encrypt" /> Encrypt    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="decrypt" /> Decrypt
-                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-                                                        <span id="checkboxErr" style="color:red;font-size:12px;"></span>
-                                                    </div>
+                                                    @*<div class="form-group">
+                                                            <input type="checkbox" id="encrypt" /> Encrypt    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="decrypt" /> Decrypt
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+                                                            <span id="checkboxErr" style="color:red;font-size:12px;"></span>
+                                                        </div>*@
                                                 </div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <a class="btn btn-primary" onclick="EncryptDecrypt()">Run</a>
+                                                        @*<a class="btn btn-primary" onclick="EncryptDecrypt()">Run</a>*@
+                                                        <a class="btn btn-primary" onclick="Run()">Run</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -154,7 +155,7 @@
                                 <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
                             </nav>
                         </div>
-                        <div class="gx-card">                            
+                        <div class="gx-card">
                             <div class="gx-card-body collapse" id="collapseTwo">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -190,10 +191,10 @@
                                     </div>
                                 </div>
                                 @*<div class="table-responsive" style="height: 170px;">
-                    <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
-                    <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
-                    <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
-                </div>*@
+                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
+                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
+                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                    </div>*@
                             </div>
                         </div>
                     </div>
@@ -210,7 +211,7 @@
                                 <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
                             </nav>
                         </div>
-                        <div class="gx-card">                            
+                        <div class="gx-card">
                             <div class="gx-card-body collapse show" id="collapseThree">
                                 <div class="table-responsive" style="height: 170px;">
                                     <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
@@ -522,14 +523,27 @@
     }
 
     function forwardToSelectDrpdwn() {
-        //$('#SelectedDpdwnlist').empty();
-        var availDdp = $('#AvailableDpdwnlist').val();
-        var option = "";
-        for (var i = 0; i < availDdp.length; i++) {
-            option += '<option selected value="' + availDdp[i] + '">' + availDdp[i] + '</option>';
-            $("#AvailableDpdwnlist option[value='" + availDdp[i] + "']").remove();
+        var options1 = $('#SelectedDpdwnlist option');
+        var selectedDdp1 = $.map(options1, function (option) {
+            return option.value;
+        });
+        //var options2 = $('#AvailableDpdwnlist option');
+        //var selectedDdp2 = $.map(options2, function (option) {
+        //    return option.value;
+        //});
+        if (selectedDdp1.length == 5) {
+            alert("You can select maximum 5 columns");
         }
-        $('#SelectedDpdwnlist').append(option);
+        else {
+            //$('#SelectedDpdwnlist').empty();
+            var availDdp = $('#AvailableDpdwnlist').val();
+            var option = "";
+            for (var i = 0; i < availDdp.length; i++) {
+                option += '<option selected value="' + availDdp[i] + '">' + availDdp[i] + '</option>';
+                $("#AvailableDpdwnlist option[value='" + availDdp[i] + "']").remove();
+            }
+            $('#SelectedDpdwnlist').append(option);
+        }       
     }
 
     function DisSelectDrpdwn() {
@@ -542,44 +556,34 @@
         $('#AvailableDpdwnlist').append(option);
     }
 
-    function EncryptDecrypt() {
-        var aa = $('#encrypt').val();
-        var pnpid = cols.indexOf("PnPID");
+    function Run() {
+        var options1 = $('#SelectedDpdwnlist option');
+        var selectedDdp1 = $.map(options1, function (option) {
+            return option.value;
+        });
         var options = $('#SelectedDpdwnlist option');
         if (options.length == 0) {
             $('#checkboxErr').text('Please select the minimum one column');
-        } else
-            if (!($('#encrypt').is(":checked")) && !($('#decrypt').is(":checked"))) {
-                $('#checkboxErr').text('Please check the checkbox which you want prefer');
-            }
-            else
-                if (pnpid == -1) {
-                    $('#checkboxErr').text('PnPID Column is Not Available for this table choose different one');
-                }
-                else {
+        } else if (selectedDdp1.length > 5) {
+            alert("Please select maximum 5 columns");
+        }
+        else {
+              var options = $('#SelectedDpdwnlist option');
+              var selectedDdp = $.map(options, function (option) {
+              return option.value;
+              });
+              var TableName = $('#Tables').val();
+              var dbName = $('#Databases').val();
+              
+              Data = {
+                   DataBase: dbName,
+                   TableName: TableName,
+                   ColumnNames: selectedDdp
+              }
 
-                    var options = $('#SelectedDpdwnlist option');
-                    var selectedDdp = $.map(options, function (option) {
-                        return option.value;
-                    });
-                    var TableName = $('#Tables').val();
-                    var dbName = $('#Databases').val();
-                    if ($('#encrypt').is(":checked")) {
-                        var hashName = 'Encrypt';
-                    }
-                    else {
-                        var hashName = 'Decrypt';
-                    }
-                    Data = {
-                        DataBase: dbName,
-                        TableName: TableName,
-                        ColumnNames: selectedDdp,
-                        CryptName: hashName
-                    }
                     $.ajax({
-                        type: "POST",
-                        //url: "/MSSQL/EncryptOrDecryptColumnData",
-                        url:'@Url.Action("EncryptOrDecryptColumnData", "MSSQL")',
+                        type: "POST",                        
+                        url:'@Url.Action("GetColumnData", "MSSQL")',
                         data: ko.toJSON(Data),
                         contentType: "application/json",
                         success: function (data) {
@@ -610,7 +614,7 @@
                             alert(error.status + " " + error.statusText);
                         }
                     });
-                }
+        }
 
     }
 
