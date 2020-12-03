@@ -16,20 +16,21 @@
                     <div class="col-lg-12">
                         <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             <h2 class="title mb-3 mb-sm-0">
-                                MS-SQL
+                                Generate Barcode & QR Code
                             </h2>
                             <nav class="mb-0 breadcrumb">
                                 <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
                             </nav>
                         </div>
-                        <div class="gx-card">
+                        <div class="gx-card max-hight-scroll">
                             <div class="gx-card-body collapse show" id="collapseOne">
                                 <form id="rootwizard-2" class="form-wizard validate-form-wizard validate">
                                     <div class="wizard-navbar">
                                         <ul>
                                             <li class="active"><a class="active show" href="#tab2-1" data-toggle="tab"><span class="wz-number">1</span> <span class="wz-label">DB Connection</span></a></li>
                                             <li><a href="#tab2-2" data-toggle="tab"><span class="wz-number">2</span> <span class="wz-label">Table Filter</span></a></li>
-                                            <li><a href="#tab2-3" data-toggle="tab"><span class="wz-number">3</span> <span class="wz-label">Encrypt/Decrypt</span></a></li>
+                                            <li><a href="#tab2-3" data-toggle="tab"><span class="wz-number">3</span> <span class="wz-label">Select Columns</span></a></li>
+                                            <li><a href="#tab2-4" data-toggle="tab"><span class="wz-number">4</span> <span class="wz-label">Table</span></a></li>
                                         </ul>
                                     </div>
                                     <div class="tab-content">
@@ -116,26 +117,27 @@
                                             <br />
                                             <div class="row">
                                                 <div class="col-md-1"></div>
-                                                <div class="col-md-4">
-                                                    @*<div class="form-group">
-                                                            <input type="checkbox" id="encrypt" /> Encrypt    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="decrypt" /> Decrypt
-                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
-                                                            <span id="checkboxErr" style="color:red;font-size:12px;"></span>
-                                                        </div>*@
+                                                <div class="col-md-4">                                                    
                                                 </div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        @*<a class="btn btn-primary" onclick="EncryptDecrypt()">Run</a>*@
+                                                    <div class="form-group">                                                        
                                                         <a class="btn btn-primary" onclick="Run()">Run</a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="tab-pane" id="tab2-4">
+                                            <div class="row">
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                            </div>                                            
+                                        </div>
                                         <ul class="pager wizard">
                                             <li class="previous"><a href="javascript:void(0)"><i class="icon-left-open"></i>Previous</a></li>
                                             <li class="next" id="loadButton"><a href="javascript:void(0)" onclick="LoadDatabases()">Next<i class="icon-right-open"></i></a> </li>
+                                            @*<li class="next" id="RunButton"><a href="javascript:void(0)" onclick="Run()">Next<i class="icon-right-open"></i></a> </li>*@
                                             <li class="next" id="nextbutton"><a href="javascript:void(0)">Next<i class="icon-right-open"></i></a> </li>
                                         </ul>
                                     </div>
@@ -144,85 +146,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                            <h2 class="title mb-3 mb-sm-0">
-                                Table Filter
-                            </h2>
-                            <nav class="mb-0 breadcrumb">
-                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
-                            </nav>
-                        </div>
-                        <div class="gx-card">
-                            <div class="gx-card-body collapse" id="collapseTwo">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="columns" class="control-label">Select Column</label>
-                                            <select class="form-control" id="columns"><option value="choose">choose</option></select>
-                                            <span id="columnErr" style="color:red;font-size:12px;"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="wildCards" class="control-label">Select Filter</label>
-                                            <select class="form-control" id="wildCards">
-                                                <option value="start">Start with</option>
-                                                <option value="end">End with</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="searchText" class="control-label">Search Content</label>
-                                            <input type="text" class="form-control" id="searchText" />
-                                            <span id="SearchErr" style="color:red;font-size:12px;"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <br />
-                                            <button class="btn btn-primary" onclick="SearchColumnData()">Search</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                @*<div class="table-responsive" style="height: 170px;">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
-                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
-                                        <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
-                                    </div>*@
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="page-heading d-sm-flex justify-content-sm-between align-items-sm-center" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                            <h2 class="title mb-3 mb-sm-0">
-                                Table
-                            </h2>
-                            <nav class="mb-0 breadcrumb">
-                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
-                            </nav>
-                        </div>
-                        <div class="gx-card">
-                            <div class="gx-card-body collapse show" id="collapseThree">
-                                <div class="table-responsive" style="height: 170px;">
-                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
-                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
-                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -242,11 +165,25 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-4">
+                        <img id="qrCode" src="" width="190" height="190" />
+                        @*<img id="qrCode" src="" style="width:200px;height:200px"/>*@
+                    </div>
+                    <div class="col-md-4">
+                        <label id="qrcodeLbl"></label>
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
 
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" style="color:white;background-color:dimgray" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="PrintImage('qrCode')">Print</button>
+                @*<button type="button" class="btn btn-primary">Pdf</button>*@                
             </div>
         </div>
 
@@ -263,11 +200,20 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <img id="barcode" src="" width="300" height="190" />
+                    </div>
+                    <div class="col-md-5">
+                        <label id="barcodeLbl"></label>
+                    </div>
+                    <div class="col-md-1"></div>
 
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" style="color:white;background-color:dimgray" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" onclick="PrintImage('barcode')">Print</button>
+                @*<button type="button" class="btn btn-primary">Pdf</button>*@
             </div>
         </div>
 
@@ -567,7 +513,7 @@
         var selectedDdp1 = $.map(options1, function (option) {
             return option.value;
         });
-                
+
         if (selectedDdp1.length == 5) {
             alert("You can select maximum 5 columns");
         }
@@ -580,7 +526,7 @@
                 $("#AvailableDpdwnlist option[value='" + availDdp[i] + "']").remove();
             }
             $('#SelectedDpdwnlist').append(option);
-        }       
+        }
     }
 
     function DisSelectDrpdwn() {
@@ -611,7 +557,7 @@
               });
               var TableName = $('#Tables').val();
               var dbName = $('#Databases').val();
-              
+
               Data = {
                    DataBase: dbName,
                    TableName: TableName,
@@ -619,7 +565,7 @@
               }
 
                     $.ajax({
-                        type: "POST",                        
+                        type: "POST",
                         url:'@Url.Action("GetColumnData", "MSSQL")',
                         data: ko.toJSON(Data),
                         contentType: "application/json",
@@ -630,16 +576,21 @@
                             $.each(response[0], function (k, v) {
                                 head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
                             })
-                            head = head + "<th>QR Code</th><th>BarCode</th></thead></tr>";
+                            head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
 
                             $("#HashTable ").append(head);
                             var body = "<tbody><tr>";
+                            var jsonBarcode;
                             $.each(response, function (index, value) {
+                                jsonBarcode = jsonConstruct(index, value);
                                 body = body + "<tr>";
                                 $.each(value, function (key, val) {
                                     body = body + "<td>" + val + "</td>";
-                                })                                    
-                                body = body + "<td><a data-toggle='modal' data-target='#myModal' ><img src='../images/qrcode.png' alt='qrcode' width='50' height='50'/></a></td><td><a data-toggle='modal' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='50' height='50'/></a></td></tr>";
+                                })
+                                body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
+                                    + " </td > <td style='display:none;'>" +
+                                    jsonBarcode
+                                +"</td></tr > ";
                             })
                             body = body + "</tbody>";
                             $("#userTable").hide();
@@ -653,6 +604,53 @@
                     });
         }
 
+    }
+
+    function jsonConstruct(index, Value) {
+        jsonObj = [];
+        $.each(Value, function (key, val) {
+            item = {}
+            item[key] = val;
+            jsonObj.push(item);
+        })
+        return JSON.stringify(jsonObj);
+    }
+
+    function GenerateQRcode(jsonBarcode) {
+        $('#barcode').attr("src", "");
+        $('#barcodeLbl').text("");
+        var Data1 = ko.toJSON(jsonBarcode);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("SingleQRCode", "MSSQL")',
+            data: { "Text": Data1},
+            contentType: "application/json",
+            success: function (data) {
+                $('#qrCode').attr("src", data);
+                $('#qrcodeLbl').text(Data1);
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
+    }
+    function GenerateBarcode(jsonBarcode) {
+        $('#barcode').attr("src", "");
+        $('#barcodeLbl').text("");
+        var Data1 = ko.toJSON(jsonBarcode);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("SingleBarCode", "MSSQL")',
+            data: { "Text": Data1 },
+            contentType: "application/json",
+            success: function (data) {
+                $('#barcode').attr("src", data);
+                $('#barcodeLbl').text(Data1);
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
     }
 
     function changeToTableFilter() {
@@ -683,6 +681,22 @@
         $("#dbFilter").css("background-color", "#f1f1f1");
         $("#dbFilter").css("color", "cornflowerblue");
 
+    }
+    
+    function ImagetoPrint(source) {
+        return "<html><head><scri" + "pt>function step1(){\n" +
+            "setTimeout('step2()', 10);}\n" +
+            "function step2(){window.print();window.close()}\n" +
+            "</scri" + "pt></head><body onload='step1()'>\n" +
+            "<img src='" + source + "' /></body></html>";
+    }
+    function PrintImage(lbl) {
+        var source = $('#' +lbl).attr('src');
+        var Pagelink = "about:blank";
+        var pwa = window.open(Pagelink, "_new");
+        pwa.document.open();
+        pwa.document.write(ImagetoPrint(source));
+        pwa.document.close();
     }
 
 </script>

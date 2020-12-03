@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Security.Cryptography;
+using ZXing;
+using ZXing.PDF417;
+using System.Drawing;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Exyte.Provider
 {
@@ -112,7 +117,7 @@ namespace Exyte.Provider
        
         public static string SqlConnection =
             string.Join(" ", ConfigurationManager.ConnectionStrings["ToolCostingEntities"].ConnectionString.
-            ToString().Split('"').Where((x, i) => i % 2 != 0)); 
+            ToString().Split('"').Where((x, i) => i % 2 != 0));
         //_sqlConnection=_sqlConnection
 
         //System.Configuration.ConfigurationManager.ConnectionStrings["DatabaseName"].ConnectionString;
@@ -129,6 +134,8 @@ namespace Exyte.Provider
         //    con.Close();
         //    return datetime;
         //}
+
+      
 
     }
 }

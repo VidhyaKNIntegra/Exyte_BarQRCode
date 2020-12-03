@@ -33,18 +33,30 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.5.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="zxing, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net47\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net47\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\AccountRepository.cs" />
     <Compile Include="Account\AuditTrack.cs" />
     <Compile Include="Account\IAccountRepository.cs" />
     <Compile Include="Account\IAuditTrack.cs" />
+    <Compile Include="BARCode\BarCode.cs" />
+    <Compile Include="BARCode\IBarCode.cs" />
     <Compile Include="MSSQL\IMSSQLRepository.cs" />
     <Compile Include="MSSQL\MSSQLRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,6 +70,9 @@
       <Project>{1534048B-B1C8-40D2-8016-8440539AEC8B}</Project>
       <Name>Exyte.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -132,6 +132,12 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="zxing, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net47\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation, Version=0.16.6.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZXing.Net.0.16.6\lib\net47\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -238,11 +244,13 @@
     <Content Include="Content\chartist\dist\scss\settings\_chartist-settings.scss" />
     <Content Include="Content\Uploads\Exyte_Excel_test.xlsx" />
     <Content Include="images\80x100.png" />
+    <Content Include="images\barcode.png" />
     <Content Include="images\demo_wait.gif" />
     <Content Include="images\exyte.jpg" />
     <Content Include="images\exyte_RGB.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\index.ico" />
+    <Content Include="images\qrcode.png" />
     <Content Include="images\spin-icon-2.gif" />
     <Content Include="Scripts\bigslide\dist\bigSlide.js" />
     <Content Include="Scripts\bigslide\dist\bigSlide.min.js" />

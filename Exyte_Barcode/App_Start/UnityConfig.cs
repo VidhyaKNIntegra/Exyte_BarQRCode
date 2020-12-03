@@ -1,4 +1,5 @@
 using Exyte.BAL.Account;
+using Exyte.BAL.BARCode;
 using Exyte.BAL.MSSQL;
 using System.Web.Mvc;
 using Unity;
@@ -19,6 +20,7 @@ namespace Exyte_Barcode
             container.RegisterType<IAccountRepository, AccountRepository>();
             container.RegisterType<IMSSQLRepository, MSSQLRepository>();
             container.RegisterType<IAuditTrack, AuditTrack>();
+            container.RegisterType<IBarCode, BarCode>();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
