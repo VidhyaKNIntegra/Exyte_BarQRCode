@@ -87,7 +87,7 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="emailfield" class="control-label">Select Table</label>
+                                                        <label for="emailfield" class="control-label">Select Category</label>
                                                         <select class="form-control" id="Tables" onchange="LoadColumns()"><option value="choose">choose</option></select>
                                                     </div>
                                                 </div>
@@ -324,7 +324,7 @@
         }
     }
 
-    function LoadTables() {
+    @*function LoadTables() {
 
         var dbName = $('#Databases').val();
         cData = {
@@ -350,9 +350,33 @@
                 alert(error.status + " " + error.statusText);
             }
         });
+    }*@
 
+    function LoadTables() {
 
-
+        var dbName = $('#Databases').val();
+        cData = {
+            DataBase: dbName
+        }
+        $.ajax({
+            type: "POST",
+            url:'@Url.Action("GetCategory", "MSSQL")',
+            data: ko.toJSON(cData),
+            contentType: "application/json",
+            success: function (data) {
+                $('#Tables').empty();
+                var option = '';
+                for (var i = 0; i < data.length; i++) {
+                    option += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                }
+                $('#Tables').append(option);
+                var option1 = '<option value="choose" selected>choose </option>';
+                $('#Tables').append(option1);
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
     }
 
     function loadData() {
@@ -399,7 +423,7 @@
 
     var cols = new Array();
 
-    function LoadColumns() {
+    @*function LoadColumns() {
         if ($('#Tables').val() == "choose") {
             alert('Please select the Table');
             $('#columns').val('choose');
@@ -417,6 +441,55 @@
                 data: {
                     'dataBase': dbName,
                     'TableName': TableName
+                },
+                contentType: "application/json",
+                success: function (data) {
+                    $('#columns').empty();
+                    var option = '';
+                    for (var i = 0; i < data.length; i++) {
+                        option += '<option value="' + data[i] + '">' + data[i] + '</option>';
+                    }
+                    $("#userTable").show();
+                    $("#SearchTable").hide();
+                    $('#columns').append(option);
+                    var option1 = '<option value="choose" selected>choose </option>';
+                    $('#columns').append(option1);
+                    $("#columns option[value='PnPID']").remove();
+                    $('#AvailableDpdwnlist').empty();
+                    $('#AvailableDpdwnlist').append(option);
+                    $('#SelectedDpdwnlist').empty();
+                    cols = [];
+                    cols = data;
+                    $("#AvailableDpdwnlist option[value='PnPID']").remove();
+
+                    $('#searchText').val('');
+                },
+                error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                }
+            });
+
+            loadData();
+        }
+    }*@
+
+    function LoadColumns() {
+        if ($('#Tables').val() == "choose") {
+            alert('Please select the Table');
+            $('#columns').val('choose');
+            $('#searchText').val('');
+            $('#SelectedDpdwnlist').empty();
+        }
+        else {
+            var CatName = $('#Tables').val();
+            var dbName = $('#Databases').val();
+
+            $.ajax({
+                type: "GET",
+                url:'@Url.Action("GetColumns", "MSSQL")',
+                data: {
+                    'dataBase': dbName,
+                    'TableName': CatName
                 },
                 contentType: "application/json",
                 success: function (data) {
@@ -682,7 +755,7 @@
         $("#dbFilter").css("color", "cornflowerblue");
 
     }
-    
+
     function ImagetoPrint(source) {
         return "<html><head><scri" + "pt>function step1(){\n" +
             "setTimeout('step2()', 10);}\n" +

@@ -117,5 +117,56 @@ namespace Exyte_Barcode.Controllers
                                 _barCode.GenerateBarCode(Text) : "";
             return Json(Barcode2D,JsonRequestBehavior.AllowGet);
         }
+
+        
+        public ActionResult Category(string Text)
+        {
+            return View();
+        }
+
+        public ActionResult GetCategoryList()
+        {
+            List<CategoryModel> response = new List<CategoryModel>();
+            response = _repository.GetCategoryList();
+            int c = 1;
+            foreach (var x in response)
+            {
+                x.SlNo = c++;
+            }
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetCategoryById(int id)
+        {
+            var response = _repository.GetCategoryById(id);
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AddCategory(CategoryModel model)
+        {
+            var response = _repository.AddCategory(model,Convert.ToInt32(Session["UserID"].ToString()));
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult UpdateCategory(CategoryModel model)
+        {
+            var response = _repository.UpdateCategory(model, Convert.ToInt32(Session["UserID"].ToString()));
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult DeleteCategory(int id)
+        {
+            var response = _repository.DeleteCategory(id);
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult GetCategory()
+        {
+            var response = _repository.GetCategory();
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetSPNames()
+        {
+            var response = _repository.GetSPNames();
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
     }
 }

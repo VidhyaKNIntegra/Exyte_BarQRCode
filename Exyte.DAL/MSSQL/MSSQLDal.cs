@@ -13,6 +13,8 @@ namespace Exyte.DAL.MSSQL
     public class MSSQLDal : IMSSQLDal
     {
         log4net.ILog logger = log4net.LogManager.GetLogger(typeof(MSSQLDal));
+        private readonly ToolCostingEntities _db=new ToolCostingEntities();
+
         public List<string> GetDatabases(DatabaseDetails dbInfo)
         {
             
@@ -85,8 +87,10 @@ namespace Exyte.DAL.MSSQL
             {
                 using (var db = new ToolCostingEntities())
                 {
-                    List<string> results = db.Database.SqlQuery<string>("SELECT COLUMN_NAME FROM [" + dataBase + "].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" + TableName + "'").ToList();
-                    return results;
+                    var sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
+                    //List<string> results = db.Database.SqlQuery<string>("SELECT COLUMN_NAME FROM [" + dataBase + "].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" + TableName + "'").ToList();
+                    List<string> result= db.Database.SqlQuery<string>("exec "+sp+ " @DBName", new SqlParameter("DBName", dataBase)).ToList<string>();
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -384,6 +388,152 @@ namespace Exyte.DAL.MSSQL
                dr.Close();
                con.Close();
                return dt;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw ex;
+            }
+        }
+
+        public List<CategoryModel> GetCategoryList()
+        {
+            var res = (from aa in _db.Categories
+                      select new CategoryModel 
+                      { 
+                          CategoryID=aa.CategoryID,
+                          CategoryName=aa.CategoryName,
+                          SPName=aa.SPName,
+                          Description=aa.Description,
+                      }).ToList();
+
+            return res;
+
+        }
+        public string AddCategory(CategoryModel model,int userId)
+        {
+            try
+            {
+                var result = _db.Categories.Where(x => x.CategoryName.Trim() == model.CategoryName.Trim()).FirstOrDefault();
+                if (result!=null)
+                {
+                    return "exists";
+                }
+                else if (result == null)
+                {
+                    Category cat = new Category();
+                    cat.CategoryName = model.CategoryName;
+                    cat.SPName = model.SPName;
+                    cat.Description = model.Description;
+                    cat.CreatedBy = userId;
+                    cat.CreatedOn = DateTime.Now;
+                    _db.Categories.Add(cat);
+                    _db.SaveChanges();
+                    return "success";
+                }
+                else
+                {
+                    return "failed";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw ex;
+            }
+        }
+
+        public CategoryModel GetCategoryById(int id)
+        {
+            var res = (from aa in _db.Categories
+                       where aa.CategoryID==id
+                       select new CategoryModel
+                       {
+                           CategoryID = aa.CategoryID,
+                           CategoryName = aa.CategoryName,
+                           SPName = aa.SPName,
+                           Description = aa.Description,
+                       }).ToList();
+
+            return res[0];
+
+        }
+        public bool UpdateCategory(CategoryModel model, int userId)
+        {
+            try
+            {
+                var result = _db.Categories.Where(x => x.CategoryID== model.CategoryID).FirstOrDefault();
+                if (result != null)
+                {
+                    result.CategoryName = model.CategoryName;
+                    result.SPName = model.SPName;
+                    result.Description = model.Description;
+                    result.ModifiedBy = userId;
+                    result.ModifiedOn = DateTime.Now;                   
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw ex;
+            }
+        }
+        public bool DeleteCategory(int id)
+        {
+            try
+            {
+                var res = _db.Categories.Where(x => x.CategoryID == id).FirstOrDefault();
+                if (res != null)
+                {
+                    _db.Categories.Remove(res);
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                throw ex;
+            }
+        }
+        
+        public List<string> GetCategory()
+        {
+            var res =_db.Categories.Select(x => x.CategoryName).ToList();
+            return res;
+        }
+        public List<string> GetSPNames()
+        {
+            try
+            {
+                //List<string> ss = new List<string>();
+                //SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
+                //con.Open();
+                //SqlCommand cmd = new SqlCommand("select SPECIFIC_NAME  from [ToolCostingDB].INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'", con);
+                //SqlDataReader dr = cmd.ExecuteReader();               
+                //while (dr.Read())
+                //{
+                //    foreach(var a in dr)
+                //    {
+                //        ss.Add((string)a);
+                //    }
+                //}
+                //dr.Close();
+                //con.Close();
+                var ss = _db.Database.SqlQuery<string>("SELECT [name] FROM SYS.PROCEDURES").ToList();
+                return ss;
             }
             catch (Exception ex)
             {

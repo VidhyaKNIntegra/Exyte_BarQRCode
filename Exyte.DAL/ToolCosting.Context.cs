@@ -12,6 +12,8 @@ namespace Exyte.DAL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class ToolCostingEntities : DbContext
     {
@@ -31,5 +33,15 @@ namespace Exyte.DAL
         public virtual DbSet<UserAudit> UserAudits { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<OperationAudit> OperationAudits { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+    
+        public virtual int GET_PIPE_ENGINEERITEMS_DETAILS(string dBName)
+        {
+            var dBNameParameter = dBName != null ?
+                new ObjectParameter("DBName", dBName) :
+                new ObjectParameter("DBName", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PIPE_ENGINEERITEMS_DETAILS", dBNameParameter);
+        }
     }
 }

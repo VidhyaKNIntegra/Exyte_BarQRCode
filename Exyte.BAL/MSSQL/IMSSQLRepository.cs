@@ -18,5 +18,12 @@ namespace Exyte.BAL.MSSQL
         DataTable GetColumnFiterTableData(DatabaseDetails dbName);
         DataTable EncryptOrDecryptColumnData(DatabaseDetails dbName);
         DataTable GetColumnData(DatabaseDetails dbName);
+        List<CategoryModel> GetCategoryList();
+        string AddCategory(CategoryModel model, int userId);
+        CategoryModel GetCategoryById(int id);
+        bool UpdateCategory(CategoryModel model, int userId);
+        bool DeleteCategory(int id);
+        List<string> GetCategory();
+        List<string> GetSPNames();
     }
 }

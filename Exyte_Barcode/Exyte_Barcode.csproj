@@ -351,6 +351,7 @@
     <Content Include="Scripts\bootstrap\dist\js\bootstrap.min.js.map" />
     <Content Include="Scripts\jquery\dist\jquery.min.map" />
     <Content Include="Scripts\jquery\dist\jquery.slim.min.map" />
+    <Content Include="Views\MSSQL\Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Exyte.BAL\Exyte.BAL.csproj">

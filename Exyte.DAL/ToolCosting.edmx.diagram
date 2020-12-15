@@ -16,6 +16,7 @@
         <AssociationConnector Association="ToolCostingModel.FK__UserAudit__UserI__3D5E1FD2" ManuallyRouted="false" />
         <EntityTypeShape EntityType="ToolCostingModel.OperationAudit" Width="1.5" PointX="7.5" PointY="8.625" />
         <AssociationConnector Association="ToolCostingModel.FK__Operation__Audit__412EB0B6" />
+        <EntityTypeShape EntityType="ToolCostingModel.Category" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

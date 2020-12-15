@@ -58,5 +58,44 @@ namespace Exyte.BAL.MSSQL
             return res;
         }
 
+        public List<CategoryModel> GetCategoryList()
+        {
+            var res = _service.GetCategoryList();
+            return res;
+        }
+
+        public string AddCategory(CategoryModel model, int userId)
+        {
+            var res = _service.AddCategory(model, userId);
+            return res;
+        }
+
+        public CategoryModel GetCategoryById(int id)
+        {
+            var res = _service.GetCategoryById(id);
+            return res;
+        }
+
+        public bool UpdateCategory(CategoryModel model, int userId)
+        {
+            var res = _service.UpdateCategory(model, userId);
+            return res;
+        }
+
+        public bool DeleteCategory(int id)
+        {
+            var res = _service.DeleteCategory(id);
+            return res;
+        }
+        public List<string> GetCategory()
+        {
+            var res = _service.GetCategory();
+            return res;
+        }
+        public List<string> GetSPNames()
+        {
+            var res = _service.GetSPNames();
+            return res;
+        }
     }
 }

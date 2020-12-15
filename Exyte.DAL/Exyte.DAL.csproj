@@ -62,6 +62,9 @@
     <Compile Include="Account\AuditTrack.cs" />
     <Compile Include="Account\IAccountDal.cs" />
     <Compile Include="Account\IAuditTrack.cs" />
+    <Compile Include="Category.cs">
+      <DependentUpon>ToolCosting.tt</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionTools.cs" />
     <Compile Include="Exceptions\appException.cs" />
     <Compile Include="Exceptions\ApplicationExceptions.cs" />
