@@ -3,6 +3,7 @@ using Exyte.Provider;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,11 @@ namespace Exyte.DAL.MSSQL
     public class MSSQLDal : IMSSQLDal
     {
         log4net.ILog logger = log4net.LogManager.GetLogger(typeof(MSSQLDal));
-        private readonly ToolCostingEntities _db=new ToolCostingEntities();
+        private readonly ToolCostingEntities _db = new ToolCostingEntities();
 
         public List<string> GetDatabases(DatabaseDetails dbInfo)
         {
-            
+
             // assumes a connectionString name in .config of Exyte_Tool_CostEntities
             var selectedDb = new ToolCostingEntities();
             // so only reference the changed properties
@@ -76,7 +77,7 @@ namespace Exyte.DAL.MSSQL
                 logger.Error(ex.ToString());
                 throw ex;
             }
-            
+
 
 
         }
@@ -85,41 +86,58 @@ namespace Exyte.DAL.MSSQL
         {
             try
             {
+                string sp = "";
                 using (var db = new ToolCostingEntities())
                 {
-                    var sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
-                    //List<string> results = db.Database.SqlQuery<string>("SELECT COLUMN_NAME FROM [" + dataBase + "].INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" + TableName + "'").ToList();
-                    List<string> result= db.Database.SqlQuery<string>("exec "+sp+ " @DBName", new SqlParameter("DBName", dataBase)).ToList<string>();
-                    return result;
+                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();                    
+                    //DataTable retVal = new DataTable();
+                    //retVal = db.Database.SqlQuery<DataTable>("exec " + sp + " @DBName", new SqlParameter("DBName", dataBase)).FirstOrDefault();                
                 }
+                List<string> ss = new List<string>();
+                SqlConnection con = new SqlConnection(Global.SqlConnection);
+                SqlCommand cmd = new SqlCommand(sp, con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DBName", dataBase);
+                DataTable dt = new DataTable();
+                con.Open();
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    dt.Load(rdr);
+                }
+                List<string> columnNames = dt.Columns.Cast<DataColumn>()
+                                 .Select(x => x.ColumnName)
+                                 .ToList();
+                return columnNames;
             }
             catch (Exception ex)
             {
                 logger.Error(ex.ToString());
                 throw ex;
             }
-            
+
         }
 
         public DataTable GetTableRecords(string dataBase, string TableName)
         {
             try
             {
+                string sp = "";
                 using (var db = new ToolCostingEntities())
-                {
-                    //List<string> ss = new List<string>();
-
-                    // var res = db.Database.SqlQuery<DataTable>("SELECT * from " + dataBase + ".[dbo]." + TableName).ToList();
+                {                                    
+                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();                                    
+                    
                     SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
                     con.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * from [" + dataBase + "].[dbo].[" + TableName + "]", con);
+                    SqlCommand cmd = new SqlCommand(sp, con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@DBName", dataBase);
                     SqlDataReader dr = cmd.ExecuteReader();
                     DataTable dt = new DataTable();
                     if (dr.HasRows)
                     {
                         dt.Load(dr);
                     }
-                    con.Close();
+                    con.Close();                    
                     return dt;
                 }
             }
@@ -127,7 +145,7 @@ namespace Exyte.DAL.MSSQL
             {
                 logger.Error(ex.ToString());
                 throw ex;
-            }            
+            }
 
         }
         public DataTable GetColumnFiterTableData(DatabaseDetails dbName)
@@ -159,7 +177,7 @@ namespace Exyte.DAL.MSSQL
                 logger.Error(ex.ToString());
                 throw ex;
             }
-            
+
         }
 
         public DataTable EncryptOrDecryptColumnData(DatabaseDetails dbName)
@@ -367,27 +385,32 @@ namespace Exyte.DAL.MSSQL
                 logger.Error(ex.ToString());
                 throw ex;
             }
-           
+
         }
         public DataTable GetColumnData(DatabaseDetails dbName)
         {
             try
             {                
                 string result = string.Join(",", dbName.ColumnNames);
-                
+                //var joinedNames = "\"" + string.Join("\", \"", dbName.ColumnNames) + "\"";
+                string sp = "";
+                sp = _db.Categories.Where(x => x.CategoryName == dbName.TableName).Select(y => y.SPName).FirstOrDefault();
                 SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("select " + result + " from [" + dbName.DataBase + "].[dbo].[" + dbName.TableName + "]", con);
+                SqlCommand cmd = new SqlCommand(sp, con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DBName", dbName.DataBase);
                 SqlDataReader dr = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
                 if (dr.HasRows == true)
                 {
-                    dt.Load(dr);                                                     
-
+                    dt.Load(dr);
                 }
-               dr.Close();
-               con.Close();
-               return dt;
+                
+                DataTable dt1=dt.DefaultView.ToTable(false, result);
+                dr.Close();
+                con.Close();
+                return dt1;
             }
             catch (Exception ex)
             {
@@ -399,23 +422,23 @@ namespace Exyte.DAL.MSSQL
         public List<CategoryModel> GetCategoryList()
         {
             var res = (from aa in _db.Categories
-                      select new CategoryModel 
-                      { 
-                          CategoryID=aa.CategoryID,
-                          CategoryName=aa.CategoryName,
-                          SPName=aa.SPName,
-                          Description=aa.Description,
-                      }).ToList();
+                       select new CategoryModel
+                       {
+                           CategoryID = aa.CategoryID,
+                           CategoryName = aa.CategoryName,
+                           SPName = aa.SPName,
+                           Description = aa.Description,
+                       }).ToList();
 
             return res;
 
         }
-        public string AddCategory(CategoryModel model,int userId)
+        public string AddCategory(CategoryModel model, int userId)
         {
             try
             {
                 var result = _db.Categories.Where(x => x.CategoryName.Trim() == model.CategoryName.Trim()).FirstOrDefault();
-                if (result!=null)
+                if (result != null)
                 {
                     return "exists";
                 }
@@ -447,7 +470,7 @@ namespace Exyte.DAL.MSSQL
         public CategoryModel GetCategoryById(int id)
         {
             var res = (from aa in _db.Categories
-                       where aa.CategoryID==id
+                       where aa.CategoryID == id
                        select new CategoryModel
                        {
                            CategoryID = aa.CategoryID,
@@ -463,14 +486,14 @@ namespace Exyte.DAL.MSSQL
         {
             try
             {
-                var result = _db.Categories.Where(x => x.CategoryID== model.CategoryID).FirstOrDefault();
+                var result = _db.Categories.Where(x => x.CategoryID == model.CategoryID).FirstOrDefault();
                 if (result != null)
                 {
                     result.CategoryName = model.CategoryName;
                     result.SPName = model.SPName;
                     result.Description = model.Description;
                     result.ModifiedBy = userId;
-                    result.ModifiedOn = DateTime.Now;                   
+                    result.ModifiedOn = DateTime.Now;
                     _db.SaveChanges();
                     return true;
                 }
@@ -508,30 +531,16 @@ namespace Exyte.DAL.MSSQL
                 throw ex;
             }
         }
-        
+
         public List<string> GetCategory()
         {
-            var res =_db.Categories.Select(x => x.CategoryName).ToList();
+            var res = _db.Categories.Select(x => x.CategoryName).ToList();
             return res;
         }
         public List<string> GetSPNames()
         {
             try
             {
-                //List<string> ss = new List<string>();
-                //SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
-                //con.Open();
-                //SqlCommand cmd = new SqlCommand("select SPECIFIC_NAME  from [ToolCostingDB].INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'", con);
-                //SqlDataReader dr = cmd.ExecuteReader();               
-                //while (dr.Read())
-                //{
-                //    foreach(var a in dr)
-                //    {
-                //        ss.Add((string)a);
-                //    }
-                //}
-                //dr.Close();
-                //con.Close();
                 var ss = _db.Database.SqlQuery<string>("SELECT [name] FROM SYS.PROCEDURES").ToList();
                 return ss;
             }
