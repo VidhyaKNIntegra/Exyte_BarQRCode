@@ -1,5 +1,6 @@
 ﻿using Exyte.Models;
 using Exyte.Provider;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -89,7 +90,7 @@ namespace Exyte.DAL.MSSQL
                 string sp = "";
                 using (var db = new ToolCostingEntities())
                 {
-                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();                    
+                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
                     //DataTable retVal = new DataTable();
                     //retVal = db.Database.SqlQuery<DataTable>("exec " + sp + " @DBName", new SqlParameter("DBName", dataBase)).FirstOrDefault();                
                 }
@@ -123,9 +124,9 @@ namespace Exyte.DAL.MSSQL
             {
                 string sp = "";
                 using (var db = new ToolCostingEntities())
-                {                                    
-                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();                                    
-                    
+                {
+                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
+
                     SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
                     con.Open();
                     SqlCommand cmd = new SqlCommand(sp, con);
@@ -137,7 +138,7 @@ namespace Exyte.DAL.MSSQL
                     {
                         dt.Load(dr);
                     }
-                    con.Close();                    
+                    con.Close();
                     return dt;
                 }
             }
@@ -390,9 +391,7 @@ namespace Exyte.DAL.MSSQL
         public DataTable GetColumnData(DatabaseDetails dbName)
         {
             try
-            {                
-                string result = string.Join(",", dbName.ColumnNames);
-                //var joinedNames = "\"" + string.Join("\", \"", dbName.ColumnNames) + "\"";
+            {               
                 string sp = "";
                 sp = _db.Categories.Where(x => x.CategoryName == dbName.TableName).Select(y => y.SPName).FirstOrDefault();
                 SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
@@ -405,9 +404,8 @@ namespace Exyte.DAL.MSSQL
                 if (dr.HasRows == true)
                 {
                     dt.Load(dr);
-                }
-                
-                DataTable dt1=dt.DefaultView.ToTable(false, result);
+                }                
+                DataTable dt1=dt.DefaultView.ToTable(false, dbName.ColumnNames);                
                 dr.Close();
                 con.Close();
                 return dt1;
