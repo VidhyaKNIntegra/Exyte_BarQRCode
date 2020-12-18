@@ -129,7 +129,8 @@
                                             <div class="row">
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
-                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                                <table class="table table-striped table-unbordered table-hover dataTables-example" id="FilterTable"></table>
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>                                                
                                             </div>                                            
                                         </div>
                                         <ul class="pager wizard">
@@ -321,34 +322,7 @@
             });
         }
     }
-
-    @*function LoadTables() {
-
-        var dbName = $('#Databases').val();
-        cData = {
-            DataBase: dbName
-        }
-        $.ajax({
-            type: "POST",
-            //url: "/MSSQL/GetTables",
-            url:'@Url.Action("GetTables", "MSSQL")',
-            data: ko.toJSON(cData),
-            contentType: "application/json",
-            success: function (data) {
-                $('#Tables').empty();
-                var option = '';
-                for (var i = 0; i < data.length; i++) {
-                    option += '<option value="' + data[i] + '">' + data[i] + '</option>';
-                }
-                $('#Tables').append(option);
-                var option1 = '<option value="choose" selected>choose </option>';
-                $('#Tables').append(option1);
-            },
-            error: function (error) {
-                alert(error.status + " " + error.statusText);
-            }
-        });
-    }*@
+      
 
     function LoadTables() {
 
@@ -420,56 +394,7 @@
     }
 
     var cols = new Array();
-
-    @*function LoadColumns() {
-        if ($('#Tables').val() == "choose") {
-            alert('Please select the Table');
-            $('#columns').val('choose');
-            $('#searchText').val('');
-            $('#SelectedDpdwnlist').empty();
-        }
-        else {
-            var TableName = $('#Tables').val();
-            var dbName = $('#Databases').val();
-
-            $.ajax({
-                type: "GET",
-                //url: "/MSSQL/GetColumns",
-                url:'@Url.Action("GetColumns", "MSSQL")',
-                data: {
-                    'dataBase': dbName,
-                    'TableName': TableName
-                },
-                contentType: "application/json",
-                success: function (data) {
-                    $('#columns').empty();
-                    var option = '';
-                    for (var i = 0; i < data.length; i++) {
-                        option += '<option value="' + data[i] + '">' + data[i] + '</option>';
-                    }
-                    $("#userTable").show();
-                    $("#SearchTable").hide();
-                    $('#columns').append(option);
-                    var option1 = '<option value="choose" selected>choose </option>';
-                    $('#columns').append(option1);
-                    $("#columns option[value='PnPID']").remove();
-                    $('#AvailableDpdwnlist').empty();
-                    $('#AvailableDpdwnlist').append(option);
-                    $('#SelectedDpdwnlist').empty();
-                    cols = [];
-                    cols = data;
-                    $("#AvailableDpdwnlist option[value='PnPID']").remove();
-
-                    $('#searchText').val('');
-                },
-                error: function (error) {
-                    alert(error.status + " " + error.statusText);
-                }
-            });
-
-            loadData();
-        }
-    }*@
+       
 
     function LoadColumns() {
         if ($('#Tables').val() == "choose") {
@@ -618,7 +543,8 @@
         var options = $('#SelectedDpdwnlist option');
         if (options.length == 0) {
             $('#checkboxErr').text('Please select the minimum one column');
-        } else if (selectedDdp1.length > 5) {
+        } else
+        if (selectedDdp1.length > 5) {
             alert("Please select maximum 5 columns");
         }
         else {
@@ -642,32 +568,74 @@
                         contentType: "application/json",
                         success: function (data) {
                             $("#HashTable").empty();
+                            $("#FilterTable ").empty();
                             var response = JSON.parse(data);
-                            var head = "<thead class='thead-inverse'><tr>";
+                            var head = "<thead class='thead-inverse'><tr>";        
                             $.each(response[0], function (k, v) {
-                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";                                                                
                             })
                             head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
 
-                            $("#HashTable ").append(head);
-                            var body = "<tbody><tr>";
-                            var jsonBarcode;
+                            $("#HashTable ").append(head);                           
+                            var body = "<tbody><tr>";                           
+                            var jsonBarcode;                           
                             $.each(response, function (index, value) {
                                 jsonBarcode = jsonConstruct(index, value);
-                                body = body + "<tr>";
+                                body = body + "<tr class='content'>";     
                                 $.each(value, function (key, val) {
-                                    body = body + "<td>" + val + "</td>";
-                                })
+                                    body = body + "<td>" + val + "</td>";                                     
+                                })  
                                 body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
                                     + " </td > <td style='display:none;'>" +
                                     jsonBarcode
-                                +"</td></tr > ";
+                                    + "</td></tr > ";                                
                             })
-                            body = body + "</tbody>";
+                            body = body + "</tbody>";                           
                             $("#userTable").hide();
                             $("#SearchTable").hide();
                             $("#HashTable").show();
                             $("#HashTable").append(body);//append body
+                            var head1 = "<thead class='thead-inverse'><tr>";
+                            for (var i = 0; i < selectedDdp.length; i++) {
+                                head1 = head1 +"<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
+                            }
+                            head1 = head1 + "</thead ></tr >";
+                            $("#FilterTable ").append(head1); 
+                            var body1 = "<tbody><tr>";
+                            body1 = body1 + "<tr class='content'>";
+                            for (var k = 1; k <= selectedDdp.length;k++) {
+                                var columnList=arrayElements(k);                                
+                                var uniqlist = makeUniqueList(columnList);
+                                var foption = "<option>choose</option>";
+                                for (i = 0; i < uniqlist.length; i++) {
+                                    foption += "<option>" + uniqlist[i] + "</option >";
+                                }
+                                //var body1 = "<tbody><tr>";
+                                //body1 = body1 + "<tr class='content'>";
+                                var j = 1;
+                                //for (var i = 0; i < selectedDdp.length; i++) {                                    
+                                //    var selctid = "filterText" + j;
+                                //    body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('"+ selctid +"');\" class='form-control'>" + foption + "</select></td>";
+                                //    j++;
+                                //} 
+                                var selctid = "filterText" + j;
+                                body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
+                                j++;
+                            }
+                            
+                            //var foption = "<option>choose</option>";   
+                            //var uniqq = unique(arr);
+
+                            //for (i = 0; i < uniqq.length; i++) {
+                            //    foption += "<option>" + uniqq[i] + "</option >";
+                            //}
+                            //var body1 = "<tbody><tr>";
+                            //body1 = body1 + "<tr class='content'>";
+                            //for (var i = 0; i < selectedDdp.length; i++) {           
+                            //    body1 = body1 + "<td><select class='form-control'>" + foption + "</select></td>";
+                            //}                            
+                            body1 = body1 + "</tr></tbody>";   
+                            $("#FilterTable ").append(body1);
                         },
                         error: function (error) {
                             alert(error.status + " " + error.statusText);
@@ -675,6 +643,36 @@
                     });
         }
 
+    }
+    function arrayElements(ele) {
+        var arr = [];
+        $("#HashTable tr").each(function () {
+            arr.push($(this).find("td:nth-child("+ele+")").text());
+        });
+        return arr;
+    }
+
+    function makeUniqueList(list) {
+        var result = [];
+        $.each(list, function (i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+        });
+        return result;
+    }
+
+    function filterText(id) {
+        var rex = new RegExp($('#'+id).val());
+        if (rex == "/choose/") { clearFilter() } else {
+            $('.content').hide();
+            $('.content').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+        }
+    }
+
+    function clearFilter() {
+        $('.filterText').val('');
+        $('.content').show();
     }
 
     function jsonConstruct(index, Value) {
