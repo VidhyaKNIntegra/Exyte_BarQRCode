@@ -603,37 +603,20 @@
                             $("#FilterTable ").append(head1); 
                             var body1 = "<tbody><tr>";
                             body1 = body1 + "<tr class='content'>";
+                            var j = 1; 
                             for (var k = 1; k <= selectedDdp.length;k++) {
                                 var columnList=arrayElements(k);                                
                                 var uniqlist = makeUniqueList(columnList);
                                 var foption = "<option>choose</option>";
                                 for (i = 0; i < uniqlist.length; i++) {
                                     foption += "<option>" + uniqlist[i] + "</option >";
-                                }
-                                //var body1 = "<tbody><tr>";
-                                //body1 = body1 + "<tr class='content'>";
-                                var j = 1;
-                                //for (var i = 0; i < selectedDdp.length; i++) {                                    
-                                //    var selctid = "filterText" + j;
-                                //    body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('"+ selctid +"');\" class='form-control'>" + foption + "</select></td>";
-                                //    j++;
-                                //} 
+                                }                                
+                                                              
                                 var selctid = "filterText" + j;
                                 body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
                                 j++;
-                            }
+                            }                            
                             
-                            //var foption = "<option>choose</option>";   
-                            //var uniqq = unique(arr);
-
-                            //for (i = 0; i < uniqq.length; i++) {
-                            //    foption += "<option>" + uniqq[i] + "</option >";
-                            //}
-                            //var body1 = "<tbody><tr>";
-                            //body1 = body1 + "<tr class='content'>";
-                            //for (var i = 0; i < selectedDdp.length; i++) {           
-                            //    body1 = body1 + "<td><select class='form-control'>" + foption + "</select></td>";
-                            //}                            
                             body1 = body1 + "</tr></tbody>";   
                             $("#FilterTable ").append(body1);
                         },

@@ -90,7 +90,7 @@ namespace Exyte.DAL.MSSQL
                 string sp = "";
                 using (var db = new ToolCostingEntities())
                 {
-                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
+                    sp = db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
                     //DataTable retVal = new DataTable();
                     //retVal = db.Database.SqlQuery<DataTable>("exec " + sp + " @DBName", new SqlParameter("DBName", dataBase)).FirstOrDefault();                
                 }
@@ -101,20 +101,22 @@ namespace Exyte.DAL.MSSQL
                 cmd.Parameters.AddWithValue("@DBName", dataBase);
                 DataTable dt = new DataTable();
                 con.Open();
-                using (var rdr = cmd.ExecuteReader())
+                using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     dt.Load(rdr);
+                    rdr.Close();
                 }
                 List<string> columnNames = dt.Columns.Cast<DataColumn>()
                                  .Select(x => x.ColumnName)
-                                 .ToList();
+                                 .ToList();                
+                con.Close();
                 return columnNames;
             }
             catch (Exception ex)
             {
                 logger.Error(ex.ToString());
                 throw ex;
-            }
+            }            
 
         }
 
