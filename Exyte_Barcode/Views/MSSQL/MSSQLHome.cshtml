@@ -131,8 +131,8 @@
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
                                                 <table class="table table-striped table-unbordered table-hover dataTables-example" id="FilterTable"></table>
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
-                                                <buton class="btn btn-success" onclick="PrintQRcodeExport()">QR code Export</buton>
-                                                <buton class="btn btn-success" onclick="PrintBarcodeExport()">Barcode Export</buton>
+                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal3'>Export QR code</buton>
+                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal4'>Generate Single QR Code</buton>
                                             </div>
                                         </div>
                                         <ul class="pager wizard">
@@ -215,6 +215,66 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" onclick="PrintImage('barcode')">Print</button>
                 @*<button type="button" class="btn btn-primary">Pdf</button>*@
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal3" role="dialog">
+    <div class="modal-dialog" style="max-width:900px">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">QR Code</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-1">
+
+                    </div>        
+                    <div class="col-md-10">
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="QrCodeTable"></table>
+                    </div>
+                    <div class="col-md-1">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="PrintQrCodeForeachRow()">Print</button>                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="myModal4" role="dialog">
+    <div class="modal-dialog" style="max-width:900px">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">QR Code</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-10">
+                        <img id="SinleQrCode" src="" width="190" height="190" />
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="PrintImage('SinleQrCode')">Print</button>
             </div>
         </div>
 
@@ -571,32 +631,55 @@
                         success: function (data) {
                             $("#HashTable").empty();
                             $("#FilterTable ").empty();
+                            $("#QrCodeTable").empty();
                             var response = JSON.parse(data);
                             var head = "<thead class='thead-inverse'><tr>";
+                            var qrhead = "<thead class='thead-inverse'><tr>";
                             $.each(response[0], function (k, v) {
                                 head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                                qrhead = qrhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
                             })
                             head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
+                            qrhead = qrhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";
 
                             $("#HashTable ").append(head);
+                            $("#QrCodeTable ").append(qrhead);
                             var body = "<tbody><tr>";
+                            var qrbody = "<tbody><tr>";
                             var jsonBarcode;
+                            var img = 1;
                             $.each(response, function (index, value) {
                                 jsonBarcode = jsonConstruct(index, value);
                                 body = body + "<tr class='content'>";
+                                qrbody = qrbody + "<tr class='content'>";
+
                                 $.each(value, function (key, val) {
                                     body = body + "<td>" + val + "</td>";
+                                    qrbody = qrbody + "<td>" + val + "</td>";
                                 })
                                 body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
                                     + " </td > <td style='display:none;'>" +
                                     jsonBarcode
                                     + "</td></tr > ";
+                                var imgId = "imag" + img;
+                                qrbody = qrbody + "<td><img id='" + imgId + "' src='' width='100' height='100'></td>";
+                                GenerateQRcodeForeachRow(jsonBarcode, imgId);
+                                qrbody = qrbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";
+                                img++;
                             })
+                            //var obj = {};
+
+                            //$.each(response, function (index, item) {
+                            //    $.extend(obj, item);
+                            //});
+                            //GenerateSingleQRcodeForAllRows("");
                             body = body + "</tbody>";
+                            qrbody = qrbody + "</tbody>";
                             $("#userTable").hide();
                             $("#SearchTable").hide();
                             $("#HashTable").show();
                             $("#HashTable").append(body);//append body
+                            $("#QrCodeTable").append(qrbody);//append body
                             var head1 = "<thead class='thead-inverse'><tr>";
                             for (var i = 0; i < selectedDdp.length; i++) {
                                 head1 = head1 +"<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
@@ -638,9 +721,9 @@
     //        j++;
 
     //    }
-        
+
     //    $("#FilterTable ").append(body1);
-        
+
     //}
 
     function arrayElements(ele) {
@@ -702,6 +785,27 @@
             }
         });
     }
+
+    function GenerateQRcodeForeachRow(jsonBarcode, imgId) {
+        $('#' + imgId).attr("src", "");
+        $('#barcodeLbl').text("");
+        var Data1 = ko.toJSON(jsonBarcode);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("SingleQRCode", "MSSQL")',
+            data: { "Text": Data1},
+            contentType: "application/json",
+            success: function (data) {
+                $('#' + imgId).attr("src", data);
+                $('#qrcodeLbl').text(Data1);
+                some= data;
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
+    }
+
     function GenerateBarcode(jsonBarcode) {
         $('#barcode').attr("src", "");
         $('#barcodeLbl').text("");
@@ -767,12 +871,37 @@
         pwa.document.close();
     }
 
-    function PrintQRcodeExport() {
-
+    function PrintQrCodeForeachRow(){
+        var pageTitle = 'Page Title',
+            stylesheet = '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
+            win = window.open('', 'Print', 'width=500,height=300');
+        win.document.write('<html><head><title>' + pageTitle + '</title>' +
+            '<link rel="stylesheet" href="' + stylesheet + '">' +
+            '</head><body>' + $('#QrCodeTable')[0].outerHTML + '</body></html>');
+        win.document.close();
+        win.print();
+        win.close();
+        return false;
     }
 
-    function PrintBarcodeExport() {
-
+    function GenerateSingleQRcodeForAllRows(response) {
+        $('#SinleQrCode').attr("src", "");
+        //$('#barcodeLbl').text("");
+        var Data1 = ko.toJSON(response);
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("SingleQRCode", "MSSQL")',
+            data: { "Text": Data1},
+            contentType: "application/json",
+            success: function (data) {
+                $('#SinleQrCode').attr("src", data);
+                //$('#qrcodeLbl').text(Data1);
+                some= data;
+            },
+            error: function (error) {
+                alert(error.status + " " + error.statusText);
+            }
+        });
     }
 
 </script>
