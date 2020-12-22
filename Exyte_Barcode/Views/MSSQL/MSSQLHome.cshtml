@@ -19,8 +19,8 @@
                                 Generate Barcode & QR Code
                             </h2>
                             @*<nav class="mb-0 breadcrumb">
-                                <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
-                            </nav>*@
+                                    <a style="float:right; margin-right:10px;"><i class='zmdi zmdi-plus-circle-o zmdi-hc-fw'></i> </a>
+                                </nav>*@
                         </div>
                         <div class="gx-card max-hight-scroll">
                             <div class="gx-card-body collapse show" id="collapseOne">
@@ -113,13 +113,13 @@
                                                         <select class="form-control" style="height:110px;width:220px" multiple id="SelectedDpdwnlist"><option></option></select>
                                                     </div>
                                                 </div>
-                                            </div>                                            
+                                            </div>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-4"></div>
                                                 <div class="col-md-2"></div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group">                                                        
+                                                    <div class="form-group">
                                                         <a class="btn btn-primary" onclick="Run()">Run</a>
                                                     </div>
                                                 </div>
@@ -130,8 +130,10 @@
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="userTable"></table>
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
                                                 <table class="table table-striped table-unbordered table-hover dataTables-example" id="FilterTable"></table>
-                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>                                                
-                                            </div>                                            
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                                <buton class="btn btn-success" onclick="PrintQRcodeExport()">QR code Export</buton>
+                                                <buton class="btn btn-success" onclick="PrintBarcodeExport()">Barcode Export</buton>
+                                            </div>
                                         </div>
                                         <ul class="pager wizard">
                                             <li class="previous"><a href="javascript:void(0)"><i class="icon-left-open"></i>Previous</a></li>
@@ -182,7 +184,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" onclick="PrintImage('qrCode')">Print</button>
-                @*<button type="button" class="btn btn-primary">Pdf</button>*@                
+                @*<button type="button" class="btn btn-primary">Pdf</button>*@
             </div>
         </div>
 
@@ -322,7 +324,7 @@
             });
         }
     }
-      
+
 
     function LoadTables() {
 
@@ -394,7 +396,7 @@
     }
 
     var cols = new Array();
-       
+
 
     function LoadColumns() {
         if ($('#Tables').val() == "choose") {
@@ -548,20 +550,20 @@
             alert("Please select maximum 5 columns");
         }
         else {
-              var options = $('#SelectedDpdwnlist option');
-              var selectedDdp = $.map(options, function (option) {
-              return option.value;
-              });
-              var TableName = $('#Tables').val();
-              var dbName = $('#Databases').val();
+            var options = $('#SelectedDpdwnlist option');
+            var selectedDdp = $.map(options, function (option) {
+            return option.value;
+            });
+            var TableName = $('#Tables').val();
+            var dbName = $('#Databases').val();
 
-              Data = {
+            Data = {
                    DataBase: dbName,
                    TableName: TableName,
                    ColumnNames: selectedDdp
-              }
+            }
 
-                    $.ajax({
+            $.ajax({
                         type: "POST",
                         url:'@Url.Action("GetColumnData", "MSSQL")',
                         data: ko.toJSON(Data),
@@ -570,27 +572,27 @@
                             $("#HashTable").empty();
                             $("#FilterTable ").empty();
                             var response = JSON.parse(data);
-                            var head = "<thead class='thead-inverse'><tr>";        
+                            var head = "<thead class='thead-inverse'><tr>";
                             $.each(response[0], function (k, v) {
-                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";                                                                
+                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
                             })
                             head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
 
-                            $("#HashTable ").append(head);                           
-                            var body = "<tbody><tr>";                           
-                            var jsonBarcode;                           
+                            $("#HashTable ").append(head);
+                            var body = "<tbody><tr>";
+                            var jsonBarcode;
                             $.each(response, function (index, value) {
                                 jsonBarcode = jsonConstruct(index, value);
-                                body = body + "<tr class='content'>";     
+                                body = body + "<tr class='content'>";
                                 $.each(value, function (key, val) {
-                                    body = body + "<td>" + val + "</td>";                                     
-                                })  
+                                    body = body + "<td>" + val + "</td>";
+                                })
                                 body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
                                     + " </td > <td style='display:none;'>" +
                                     jsonBarcode
-                                    + "</td></tr > ";                                
+                                    + "</td></tr > ";
                             })
-                            body = body + "</tbody>";                           
+                            body = body + "</tbody>";
                             $("#userTable").hide();
                             $("#SearchTable").hide();
                             $("#HashTable").show();
@@ -600,33 +602,47 @@
                                 head1 = head1 +"<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
                             }
                             head1 = head1 + "</thead ></tr >";
-                            $("#FilterTable ").append(head1); 
+                            $("#FilterTable ").append(head1);
                             var body1 = "<tbody><tr>";
                             body1 = body1 + "<tr class='content'>";
-                            var j = 1; 
+                            var j = 1;
                             for (var k = 1; k <= selectedDdp.length;k++) {
-                                var columnList=arrayElements(k);                                
+                                var columnList=arrayElements(k);
                                 var uniqlist = makeUniqueList(columnList);
                                 var foption = "<option>choose</option>";
                                 for (i = 0; i < uniqlist.length; i++) {
                                     foption += "<option>" + uniqlist[i] + "</option >";
-                                }                                
-                                                              
+                                }
+
                                 var selctid = "filterText" + j;
                                 body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
                                 j++;
-                            }                            
-                            
-                            body1 = body1 + "</tr></tbody>";   
+                            }
+                            body1 = body1 + "</tr></tbody>";
+                            //body1 = body1 + "<td><button onclick='filterTable();' class='btn btn-success'>Filter</button></td></tr></tbody>";
                             $("#FilterTable ").append(body1);
                         },
                         error: function (error) {
                             alert(error.status + " " + error.statusText);
                         }
-                    });
+            });
         }
 
     }
+
+    //function filterTable() {
+    //    var j = 1;
+    //    var selctid = [];
+    //    for (var k = 1; k <= selectedDdp.length; k++) {
+    //        selctid.push("filterText" + j);
+    //        j++;
+
+    //    }
+        
+    //    $("#FilterTable ").append(body1);
+        
+    //}
+
     function arrayElements(ele) {
         var arr = [];
         $("#HashTable tr").each(function () {
@@ -749,6 +765,14 @@
         pwa.document.open();
         pwa.document.write(ImagetoPrint(source));
         pwa.document.close();
+    }
+
+    function PrintQRcodeExport() {
+
+    }
+
+    function PrintBarcodeExport() {
+
     }
 
 </script>
