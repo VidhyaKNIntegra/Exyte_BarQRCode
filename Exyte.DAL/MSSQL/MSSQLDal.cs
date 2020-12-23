@@ -91,9 +91,7 @@ namespace Exyte.DAL.MSSQL
                 using (var db = new ToolCostingEntities())
                 {
                     sp = db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
-                    //DataTable retVal = new DataTable();
-                    //retVal = db.Database.SqlQuery<DataTable>("exec " + sp + " @DBName", new SqlParameter("DBName", dataBase)).FirstOrDefault();                
-                }
+                }               
                 List<string> ss = new List<string>();
                 SqlConnection con = new SqlConnection(Global.SqlConnection);
                 SqlCommand cmd = new SqlCommand(sp, con);
@@ -127,7 +125,7 @@ namespace Exyte.DAL.MSSQL
                 string sp = "";
                 using (var db = new ToolCostingEntities())
                 {
-                    sp = _db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
+                    sp = db.Categories.Where(x => x.CategoryName == TableName).Select(y => y.SPName).FirstOrDefault();
 
                     SqlConnection con = new SqlConnection(Provider.Global.SqlConnection);
                     con.Open();

@@ -131,8 +131,13 @@
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="SearchTable"></table>
                                                 <table class="table table-striped table-unbordered table-hover dataTables-example" id="FilterTable"></table>
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" id="HashTable"></table>
+                                                <table style="display:none;" class="table table-striped table-bordered table-hover dataTables-example" id="tableY">
+                                                    <thead></thead>
+                                                    <tbody></tbody>
+                                                </table>
                                                 <buton class="btn btn-success" data-toggle='modal' data-target='#myModal3'>Export QR code</buton>
-                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal4'>Generate Single QR Code</buton>
+                                                @*<buton class="btn btn-success" data-toggle='modal' data-target='#myModal4' onclick="GenerateSingleQRcodeForAllRows()">Generate Single QR Code</buton>*@
+                                                <buton class="btn btn-success" onclick="GenerateSingleQRcodeForAllRows()">Generate Single QR Code</buton>
                                             </div>
                                         </div>
                                         <ul class="pager wizard">
@@ -233,7 +238,7 @@
                 <div class="row">
                     <div class="col-md-1">
 
-                    </div>        
+                    </div>
                     <div class="col-md-10">
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="QrCodeTable"></table>
                     </div>
@@ -244,7 +249,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="PrintQrCodeForeachRow()">Print</button>                
+                <button type="button" class="btn btn-success" onclick="PrintQrCodeForeachRow()">Print</button>
             </div>
         </div>
 
@@ -488,13 +493,13 @@
                     $('#columns').append(option);
                     var option1 = '<option value="choose" selected>choose </option>';
                     $('#columns').append(option1);
-                    $("#columns option[value='PnPID']").remove();
+                    //$("#columns option[value='PnPID']").remove();
                     $('#AvailableDpdwnlist').empty();
                     $('#AvailableDpdwnlist').append(option);
                     $('#SelectedDpdwnlist').empty();
                     cols = [];
                     cols = data;
-                    $("#AvailableDpdwnlist option[value='PnPID']").remove();
+                    //$("#AvailableDpdwnlist option[value='PnPID']").remove();
 
                     $('#searchText').val('');
                 },
@@ -503,7 +508,7 @@
                 }
             });
 
-            loadData();
+            //loadData();
         }
     }
 
@@ -596,7 +601,7 @@
         }
         $('#AvailableDpdwnlist').append(option);
     }
-
+    var restable = '';
     function Run() {
         var options1 = $('#SelectedDpdwnlist option');
         var selectedDdp1 = $.map(options1, function (option) {
@@ -666,15 +671,15 @@
                                 GenerateQRcodeForeachRow(jsonBarcode, imgId);
                                 qrbody = qrbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";
                                 img++;
-                            })                            
-                            GenerateSingleQRcodeForAllRows(response);
+                            })
+                            //GenerateSingleQRcodeForAllRows(response);
                             body = body + "</tbody>";
                             qrbody = qrbody + "</tbody>";
                             $("#userTable").hide();
                             $("#SearchTable").hide();
                             $("#HashTable").show();
                             $("#HashTable").append(body);//append body
-                            $("#QrCodeTable").append(qrbody);//append body                            
+                            $("#QrCodeTable").append(qrbody);//append body
                             var head1 = "<thead class='thead-inverse'><tr>";
                             for (var i = 0; i < selectedDdp.length; i++) {
                                 head1 = head1 +"<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
@@ -699,6 +704,7 @@
                             body1 = body1 + "</tr></tbody>";
                             //body1 = body1 + "<td><button onclick='filterTable();' class='btn btn-success'>Filter</button></td></tr></tbody>";
                             $("#FilterTable ").append(body1);
+                            restable = response;
                         },
                         error: function (error) {
                             alert(error.status + " " + error.statusText);
@@ -880,40 +886,92 @@
         return false;
     }
 
-    //function html2json() {
-    //    var json = '{';
-    //    var otArr = [];
-    //    var tbl2 = $('#HashTable tr').each(function (i) {
-    //        x = $(this).children();
-    //        var itArr = [];
-    //        x.each(function () {
-    //            itArr.push('"' + $(this).text() + '"');
-    //        });
-    //        otArr.push('"' + i + '": [' + itArr.join(',') + ']');
-    //    })
-    //    json += otArr.join(",") + '}'
+    function html2json() {
+        $('#tableY').empty();
+        head ="<thead></thead>";
+        body ="<tbody></tbody>";
+        $('#tableY').append(head);
+        $('#tableY').append(body);
+        var options = $('#SelectedDpdwnlist option');
+        var selectedDdp = $.map(options, function (option) {
+            return option.value;
+        });
+        var col = parseInt(selectedDdp.length);
 
-    //    return json;
-    //}
+        for (var j = 0; j < col; j++) {
+            if ($('table#tableY thead').children().length === 0) {
+                $('table#tableY thead').append('<tr></tr>');
+            }
 
-    function GenerateSingleQRcodeForAllRows(response) {
-        //var ss = html2json();
-        var jsonData = JSON.stringify(response);       
-        $('#SinleQrCode').attr("src", "");        
-        var Data1 = ko.toJSON(jsonData);
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("SingleQRCode", "MSSQL")',
-            data: { "Text": Data1},
-            contentType: "application/json",
-            success: function (data) {
-                $('#SinleQrCode').attr("src", data);                
-                some= data;
-            },
-            error: function (error) {
-                alert(error.status + " " + error.statusText);
+            $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
+
+            $('table#HashTable tbody tr:visible').each(function (i) {
+                if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
+                    $('table#tableY tbody').append('<tr></tr>');
+                }
+                $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append('<td>' + $($(this).children()[j]).text() + '</tr>');
+            });
+        }
+
+        var myRows = [];
+        var $headers = $("#tableY th");
+        var $rows = $("#tableY tbody tr").each(function (index) {
+            $cells = $(this).find("td");
+            myRows[index] = {};
+            $cells.each(function (cellIndex) {
+                myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+            });
+        });
+
+        // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+        var myObj = {};
+        //myObj.myrows = myRows;
+        myObj = myRows;
+        $.each(myObj, function (key, value) {
+            if (typeof myObj[key] === 'object' && Object.keys(myObj[key]).length == 0) {
+                delete myObj[key];
+            }
+            else {
+                $.each(value, function (k, v) {
+                    if (v === "" || v === null) {
+                        delete myObj[key];
+                    }
+                })
             }
         });
+        return myObj;
+    }
+
+    function GenerateSingleQRcodeForAllRows() {
+        var ss = html2json();
+        var filtered = ss.filter(function (el) {
+            return el != null;
+        });
+        if (filtered.length <= 50) {
+            var jsonData = JSON.stringify(filtered);
+            //var aaa = restable[0] + restable[1] + restable[2] + restable[3] + restable[4] + restable[5] + restable[6] + restable[7] + restable[8] + restable[9] + restable[10] + restable[11] + restable[12] + restable[13] + restable[14] + restable[15] + restable[16] + restable[17] + restable[18] + restable[19] + restable[20] + restable[21] + restable[22] + restable[23] + restable[24] + restable[25] + restable[26] + restable[27] + restable[28] + restable[29] + restable[30] + restable[31] + restable[32] + restable[33] + restable[34] + restable[35] + restable[36] + restable[37] + restable[38] + restable[39] + restable[40] + restable[41] + restable[42] + restable[43] + restable[44] + restable[45] + restable[46] + restable[47] + restable[48] + restable[49] + restable[50];
+            //var jsonData = JSON.stringify(aaa);
+            $('#SinleQrCode').attr("src", "");
+            var Data1 = ko.toJSON(jsonData);
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("SingleQRCode", "MSSQL")',
+                data: { "Text": Data1},
+                contentType: "application/json",
+                success: function (data) {
+                    $('#SinleQrCode').attr("src", data);
+                    some = data;
+                    $('#myModal4').modal('show');
+                },
+                error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                }
+            });
+        }
+        else {
+            alert("please select maximum 50 records");
+        }
+
     }
 
 </script>
