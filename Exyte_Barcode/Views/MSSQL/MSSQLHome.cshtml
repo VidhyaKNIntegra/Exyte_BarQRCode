@@ -135,8 +135,9 @@
                                                     <thead></thead>
                                                     <tbody></tbody>
                                                 </table>
-                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal3'>Export QR code</buton>
-                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal5'>Export Barcode</buton>
+                                                @*<buton class="btn btn-success" data-toggle='modal' data-target='#myModal3'>Export QR code</buton>*@
+                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal3' onclick="getFilterData()">Export QR code</buton>
+                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal5' onclick="GetBarcodeFilterData()">Export Barcode</buton>
                                                 <buton class="btn btn-success" onclick="GenerateSingleQRcodeForAllRows()">Generate Single QR Code</buton>
                                             </div>
                                         </div>
@@ -240,7 +241,11 @@
 
                     </div>
                     <div class="col-md-10">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" id="QrCodeTable"></table>
+                        @*<table class="table table-striped table-bordered table-hover dataTables-example" id="QrCodeTable"></table>*@
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="QrTable2">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                     <div class="col-md-1">
 
@@ -300,7 +305,11 @@
 
                     </div>
                     <div class="col-md-10">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" id="BarcodeTable"></table>
+                        @*<table class="table table-striped table-bordered table-hover dataTables-example" id="BarcodeTable"></table>*@
+                        <table class="table table-striped table-bordered table-hover dataTables-example" id="BarcodeTable2">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                     <div class="col-md-1">
 
@@ -631,7 +640,8 @@
         }
         $('#AvailableDpdwnlist').append(option);
     }
-    var restable = '';
+
+
     function Run() {
         var options1 = $('#SelectedDpdwnlist option');
         var selectedDdp1 = $.map(options1, function (option) {
@@ -666,39 +676,41 @@
                         success: function (data) {
                             $("#HashTable").empty();
                             $("#FilterTable ").empty();
-                            $("#QrCodeTable").empty();
-                            $("#BarcodeTable").empty();//barcode
+                            //$("#QrCodeTable").empty();
+                            //$("#BarcodeTable").empty();//barcode
                             var response = JSON.parse(data);
-                            var head = "<thead class='thead-inverse'><tr>";
-                            var qrhead = "<thead class='thead-inverse'><tr>";
-                            var barhead = "<thead class='thead-inverse'><tr>";//barcode
+                            //var head = "<thead class='thead-inverse'><tr>";
+                            var head = "<thead class='thead-inverse'><tr><th></th>";
+                            //var qrhead = "<thead class='thead-inverse'><tr>";
+                            //var barhead = "<thead class='thead-inverse'><tr>";//barcode
                             $.each(response[0], function (k, v) {
                                 head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
-                                qrhead = qrhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
-                                barhead = barhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";//barcode
+                                //qrhead = qrhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                                //barhead = barhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";//barcode
                             })
                             head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
-                            qrhead = qrhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";
-                            barhead = barhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";//barcode
+                            //qrhead = qrhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";
+                            //barhead = barhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";//barcode
 
                             $("#HashTable ").append(head);
-                            $("#QrCodeTable ").append(qrhead);
-                            $("#BarcodeTable").append(barhead);//barcode
+                            //$("#QrCodeTable ").append(qrhead);
+                            //$("#BarcodeTable").append(barhead);//barcode
                             var body = "<tbody><tr>";
-                            var qrbody = "<tbody><tr>";
-                            var barbody = "<tbody><tr>";//barcode
+                            //var qrbody = "<tbody><tr>";
+                            //var barbody = "<tbody><tr>";//barcode
                             var jsonBarcode;
                             var img = 1;
                             $.each(response, function (index, value) {
                                 jsonBarcode = jsonConstruct(index, value);
-                                body = body + "<tr class='content'>";
-                                qrbody = qrbody + "<tr class='content'>";
-                                barbody = barbody + "<tr class='content'>";//barcode
+                                //body = body + "<tr class='content'>";                                
+                                body = body + "<tr class='content'><td><input type='checkbox'/></td>";
+                                //qrbody = qrbody + "<tr class='content'>";                                
+                                //barbody = barbody + "<tr class='content'>";//barcode
 
                                 $.each(value, function (key, val) {
                                     body = body + "<td>" + val + "</td>";
-                                    qrbody = qrbody + "<td>" + val + "</td>";
-                                    barbody = barbody + "<td>" + val + "</td>";//barcode
+                                    //qrbody = qrbody + "<td>" + val + "</td>";
+                                    //barbody = barbody + "<td>" + val + "</td>";//barcode
                                 })
                                 body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
                                     + " </td > <td style='display:none;'>" +
@@ -706,24 +718,24 @@
                                     + "</td></tr > ";
                                 var imgId = "imag" + img;
                                 var imgId2 = "imagbar" + img;//barcode
-                                qrbody = qrbody + "<td><img id='" + imgId + "' src='' width='100' height='100'></td>";
-                                barbody = barbody + "<td><img id='" + imgId2 + "' src='' width='150' height='75'></td>";//barcode
-                                GenerateQRcodeForeachRow(jsonBarcode, imgId);
-                                GenerateBarcodeForeachRow(jsonBarcode, imgId2);//barcode
-                                qrbody = qrbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";
-                                barbody = barbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";//barcode
+                                //qrbody = qrbody + "<td><img id='" + imgId + "' src='' width='100' height='100'></td>";
+                                //barbody = barbody + "<td><img id='" + imgId2 + "' src='' width='150' height='75'></td>";//barcode
+                                //GenerateQRcodeForeachRow(jsonBarcode, imgId);
+                                //GenerateBarcodeForeachRow(jsonBarcode, imgId2);//barcode
+                                //qrbody = qrbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";
+                                //barbody = barbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";//barcode
                                 img++;
                             })
                             
                             body = body + "</tbody>";
-                            qrbody = qrbody + "</tbody>";
-                            barbody = barbody + "</tbody>";//barcode
+                            //qrbody = qrbody + "</tbody>";
+                            //barbody = barbody + "</tbody>";//barcode
                             $("#userTable").hide();
                             $("#SearchTable").hide();
                             $("#HashTable").show();
                             $("#HashTable").append(body);//append body
-                            $("#QrCodeTable").append(qrbody);//append body
-                            $("#BarcodeTable").append(barbody);//append body
+                            //$("#QrCodeTable").append(qrbody);//append body
+                            //$("#BarcodeTable").append(barbody);//append body
 
                             //========Start Filter====================
                             var head1 = "<thead class='thead-inverse'><tr>";
@@ -735,16 +747,19 @@
                             var body1 = "<tbody><tr>";
                             body1 = body1 + "<tr class='content'>";
                             var j = 1;
-                            for (var k = 1; k <= selectedDdp.length;k++) {
+                            for (var k = 1; k <= selectedDdp.length+1;k++) {
                                 var columnList=arrayElements(k);
                                 var uniqlist = makeUniqueList(columnList);
                                 var foption = "<option>choose</option>";
-                                for (i = 0; i < uniqlist.length; i++) {
+                                for (i = 1; i < uniqlist.length; i++) {
                                     foption += "<option>" + uniqlist[i] + "</option >";
                                 }
 
                                 var selctid = "filterText" + j;
-                                body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
+                                if (j>1) {
+                                    body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
+                                }
+                                
                                 j++;
                             }
                             body1 = body1 + "</tr></tbody>";
@@ -927,7 +942,7 @@
             win = window.open('', 'Print', 'width=500,height=300');
         win.document.write('<html><head><title>' + pageTitle + '</title>' +
             '<link rel="stylesheet" href="' + stylesheet + '">' +
-            '</head><body>' + $('#QrCodeTable')[0].outerHTML + '</body></html>');
+            '</head><body>' + $('#QrTable2')[0].outerHTML + '</body></html>');
         win.document.close();
         win.print();
         win.close();
@@ -996,9 +1011,7 @@
             return el != null;
         });
         if (filtered.length <= 50) {
-            var jsonData = JSON.stringify(filtered);
-            //var aaa = restable[0] + restable[1] + restable[2] + restable[3] + restable[4] + restable[5] + restable[6] + restable[7] + restable[8] + restable[9] + restable[10] + restable[11] + restable[12] + restable[13] + restable[14] + restable[15] + restable[16] + restable[17] + restable[18] + restable[19] + restable[20] + restable[21] + restable[22] + restable[23] + restable[24] + restable[25] + restable[26] + restable[27] + restable[28] + restable[29] + restable[30] + restable[31] + restable[32] + restable[33] + restable[34] + restable[35] + restable[36] + restable[37] + restable[38] + restable[39] + restable[40] + restable[41] + restable[42] + restable[43] + restable[44] + restable[45] + restable[46] + restable[47] + restable[48] + restable[49] + restable[50];
-            //var jsonData = JSON.stringify(aaa);
+            var jsonData = JSON.stringify(filtered);           
             $('#SinleQrCode').attr("src", "");
             var Data1 = ko.toJSON(jsonData);
             $.ajax({
@@ -1047,11 +1060,157 @@
             win = window.open('', 'Print', 'width=500,height=300');
         win.document.write('<html><head><title>' + pageTitle + '</title>' +
             '<link rel="stylesheet" href="' + stylesheet + '">' +
-            '</head><body>' + $('#BarcodeTable')[0].outerHTML + '</body></html>');
+            '</head><body>' + $('#BarcodeTable2')[0].outerHTML + '</body></html>');
         win.document.close();
         win.print();
         win.close();
         return false;
+    }
+
+    function getFilterData() {
+        CopyToQrTable("QrTable2");
+        $('table#QrTable2').find('tr').each(function () {
+            this.removeChild(this.cells[0]);
+        });
+    }
+    function CopyToQrTable(QrTable1) {
+        $('#' + QrTable1).empty();
+        head = "<thead></thead>";
+        body = "<tbody></tbody>";
+        $('#' + QrTable1).append(head);
+        $('#' + QrTable1).append(body);
+        var options = $('#SelectedDpdwnlist option');
+        var selectedDdp = $.map(options, function (option) {
+            return option.value;
+        });
+        var col = parseInt(selectedDdp.length+1);
+
+        for (var j = 0; j < col; j++) {
+            if ($('table#' + QrTable1+' thead').children().length === 0) {
+                $('table#' + QrTable1 +' thead').append('<tr></tr>');
+            }
+
+            $('table#' + QrTable1 + ' thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');            
+        }
+        $('table#' + QrTable1 + ' thead tr').append('<th>QR Code</th>');
+        var rr = 1;
+        $('table#HashTable input[type=checkbox]:checked').each(function (i) {
+            if ($('table#' + QrTable1 + ' tbody').children().length != $('table#HashTable tbody').children().length) {
+                $('table#' + QrTable1 + ' tbody').append('<tr></tr>');
+            }
+            var row = $(this).closest("tr")[0];
+            var td = '<td></td>';
+            for (var z = 1; z <= selectedDdp.length; z++) {                
+                td = td + '<td>' + row.cells[z].innerHTML + '</td>';
+            }
+            var QrimgId = "QrImag" + rr;
+            $('table#' + QrTable1 + ' tbody tr:nth-child(' + (i + 1) + ')').append(td + "<td> <img id='" + QrimgId + "' src='' width='100' height='100'></td></tr>");
+            var myRows = [];
+            var min = '';
+            var $headers = $("#" + QrTable1 +" th");
+            var $rows = $("#" + QrTable1 +" tbody tr").each(function (index) {
+                $cells = $(this).find("td");
+                while (myRows.length > 0) {
+                    myRows.pop();
+                }
+                
+                myRows[index] = {};
+                $cells.each(function (cellIndex) {
+                    var cn = cellIndex;                    
+                    if (cn < $cells.length-1) {
+                        if (cellIndex > 0) {
+                            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+                        }
+                    }
+                    
+                    
+                });
+                min = myRows;                
+            });
+            var filtered = min.filter(function (el) {
+                return el != null;
+            });
+            var jsonData = JSON.stringify(filtered);
+            GenerateQRcodeForeachRow(jsonData, QrimgId);
+            //var myObj = {};
+            //myObj.myrows = myRows;
+           // myObj = myRows;
+           // var jsonData = JSON.stringify(myObj); 
+            //GenerateQRcodeForeachRow(jsonData, QrimgId);
+            rr++;
+        });
+        
+    }
+
+    function GetBarcodeFilterData() {
+        CopyToBarcodeTable("BarcodeTable2");
+        $('table#BarcodeTable2').find('tr').each(function () {
+            this.removeChild(this.cells[0]);
+        });
+    }
+
+    function CopyToBarcodeTable(QrTable1) {
+        $('#' + QrTable1).empty();
+        head = "<thead></thead>";
+        body = "<tbody></tbody>";
+        $('#' + QrTable1).append(head);
+        $('#' + QrTable1).append(body);
+        var options = $('#SelectedDpdwnlist option');
+        var selectedDdp = $.map(options, function (option) {
+            return option.value;
+        });
+        var col = parseInt(selectedDdp.length + 1);
+
+        for (var j = 0; j < col; j++) {
+            if ($('table#' + QrTable1 + ' thead').children().length === 0) {
+                $('table#' + QrTable1 + ' thead').append('<tr></tr>');
+            }
+
+            $('table#' + QrTable1 + ' thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
+        }
+        $('table#' + QrTable1 + ' thead tr').append('<th>QR Code</th>');
+        var rr = 1;
+        $('table#HashTable input[type=checkbox]:checked').each(function (i) {
+            if ($('table#' + QrTable1 + ' tbody').children().length != $('table#HashTable tbody').children().length) {
+                $('table#' + QrTable1 + ' tbody').append('<tr></tr>');
+            }
+            var row = $(this).closest("tr")[0];
+            var td = '<td></td>';
+            for (var z = 1; z <= selectedDdp.length; z++) {
+                td = td + '<td>' + row.cells[z].innerHTML + '</td>';
+            }
+            var QrimgId = "BarImag" + rr;
+            $('table#' + QrTable1 + ' tbody tr:nth-child(' + (i + 1) + ')').append(td + "<td> <img id='" + QrimgId + "' src='' width='150' height='100'></td></tr>");
+            var myRows = [];
+            var min = '';
+            var $headers = $("#" + QrTable1 + " th");
+            var $rows = $("#" + QrTable1 + " tbody tr").each(function (index) {
+                $cells = $(this).find("td");
+                while (myRows.length > 0) {
+                    myRows.pop();
+                }
+
+                myRows[index] = {};
+                $cells.each(function (cellIndex) {
+                    var cn = cellIndex;
+                    if (cn < $cells.length - 1) {
+                        if (cellIndex > 0) {
+                            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+                        }
+                    }
+
+
+                });
+                min = myRows;
+            });
+            var filtered = min.filter(function (el) {
+                return el != null;
+            });
+            var jsonData = JSON.stringify(filtered);
+            GenerateBarcodeForeachRow(jsonData, QrimgId);            
+            rr++;
+        });
+
     }
 </script>
 
