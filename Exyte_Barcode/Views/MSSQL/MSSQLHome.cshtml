@@ -688,7 +688,7 @@
                                 //qrhead = qrhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
                                 //barhead = barhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";//barcode
                             })
-                            head = head + "<th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
+                            head = head + "<th>Url</th><th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
                             //qrhead = qrhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";
                             //barhead = barhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";//barcode
 
@@ -699,7 +699,7 @@
                             //var qrbody = "<tbody><tr>";
                             //var barbody = "<tbody><tr>";//barcode
                             var jsonBarcode;
-                            var img = 1;
+                            var img = 1;                            
                             $.each(response, function (index, value) {
                                 jsonBarcode = jsonConstruct(index, value);
                                 //body = body + "<tr class='content'>";                                
@@ -712,12 +712,13 @@
                                     //qrbody = qrbody + "<td>" + val + "</td>";
                                     //barbody = barbody + "<td>" + val + "</td>";//barcode
                                 })
-                                body = body + "<td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
+                                var UrlId = "url" + img;
+                                body = body + "<td><input type='text' class='form-control' id='" + UrlId + "'/></td><td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + "," + UrlId+ ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode +")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
                                     + " </td > <td style='display:none;'>" +
                                     jsonBarcode
                                     + "</td></tr > ";
-                                var imgId = "imag" + img;
-                                var imgId2 = "imagbar" + img;//barcode
+                                //var imgId = "imag" + img;
+                                //var imgId2 = "imagbar" + img;//barcode
                                 //qrbody = qrbody + "<td><img id='" + imgId + "' src='' width='100' height='100'></td>";
                                 //barbody = barbody + "<td><img id='" + imgId2 + "' src='' width='150' height='75'></td>";//barcode
                                 //GenerateQRcodeForeachRow(jsonBarcode, imgId);
@@ -829,7 +830,9 @@
         return JSON.stringify(jsonObj);
     }
 
-    function GenerateQRcode(jsonBarcode) {
+    function GenerateQRcode(jsonBarcode, UrlId) {
+        var urll = $('#' + UrlId.id).val();       
+        jsonBarcode.push({ Url: urll });        
         $('#barcode').attr("src", "");
         $('#barcodeLbl').text("");
         var Data1 = ko.toJSON(jsonBarcode);
