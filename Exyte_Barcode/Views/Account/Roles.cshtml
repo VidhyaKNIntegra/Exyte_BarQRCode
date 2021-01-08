@@ -307,7 +307,7 @@
         }
 
         self.AddRole = function () {
-            if (self.RoleName() == undefined) {
+            if (self.RoleName() == undefined || self.RoleName()=="") {
                 $('#RoleNameErr').text('Enter the role name');
             }
             else {
