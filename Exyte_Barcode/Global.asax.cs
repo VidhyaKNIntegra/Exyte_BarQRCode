@@ -14,6 +14,7 @@ namespace Exyte_Barcode
         {
             AreaRegistration.RegisterAllAreas();
             UnityConfig.RegisterComponents();
+            log4net.Config.XmlConfigurator.Configure();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

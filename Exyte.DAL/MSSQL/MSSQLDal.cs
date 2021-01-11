@@ -19,7 +19,7 @@ namespace Exyte.DAL.MSSQL
 
         public List<string> GetDatabases(DatabaseDetails dbInfo)
         {
-
+            logger.Info("MSSQL connection started");
             // assumes a connectionString name in .config of Exyte_Tool_CostEntities
             var selectedDb = new ToolCostingEntities();
             // so only reference the changed properties
