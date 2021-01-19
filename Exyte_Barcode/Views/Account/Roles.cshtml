@@ -303,7 +303,9 @@
         self.ClearOldData = function () {
             self.RoleName("");
             self.RoleDescription("");
-            $("input[type='checkbox']").prop("checked",false);
+            $("input[type='checkbox']").prop("checked", false);
+            $('#RoleNameErr').text('');
+            $('#wkslistErr').text('');
         }
 
         self.AddRole = function () {

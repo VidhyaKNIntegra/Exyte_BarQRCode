@@ -53,7 +53,8 @@ namespace Exyte.DAL
                     sqlCnxStringBuilder.Password = password;
 
                 // set the integrated security status
-                sqlCnxStringBuilder.IntegratedSecurity = integratedSecuity;
+                if (string.IsNullOrEmpty(userId) && string.IsNullOrEmpty(password))
+                    sqlCnxStringBuilder.IntegratedSecurity = integratedSecuity;
 
                 // now flip the properties that were changed
                 source.Database.Connection.ConnectionString

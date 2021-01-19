@@ -382,8 +382,9 @@
             $('#serverErr').text('Please enter the server Name');
         }
         else if (auth == "false" && (UserName == '' || Password == '')) {
-            $('#userNameErr').text('Enter the UserName');
-            $('#PasswordErr').text('Enter the Password');
+            //$('#userNameErr').text('Enter the UserName');
+            //$('#PasswordErr').text('Enter the Password');
+            return false;
         }
         else {
             $('#loadIcon').show();
@@ -1022,15 +1023,82 @@
         return myObj;
     }
 
-    function GenerateSingleQRcodeForAllRows() {
-        var ss = html2json();
-        var filtered = ss.filter(function (el) {
-            return el != null;
+    function CopyToSingleQrCodeTable() {
+        $('#tableY').empty();
+        head = "<thead></thead>";
+        body = "<tbody></tbody>";
+        $('#tableY').append(head);
+        $('#tableY').append(body);
+        var options = $('#SelectedDpdwnlist option');
+        var selectedDdp = $.map(options, function (option) {
+            return option.value;
         });
-        if (filtered.length <= 50) {
-            var jsonData = JSON.stringify(filtered);
+        var col = parseInt(selectedDdp.length + 3);
+
+        for (var j = 0; j < col; j++) {
+            if ($('table#tableY thead').children().length === 0) {
+                $('table#tableY thead').append('<tr></tr>');
+            }
+
+            $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
+        }
+        $('table#tableY thead tr').append('<th>QR Code</th>');
+        
+        var myObj = {}; 
+        $('table#HashTable  .checkbxId:checkbox:checked').each(function (i) {
+            if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
+                $('table#tableY tbody').append('<tr></tr>');
+            }
+            var row = $(this).closest("tr")[0];
+            var td = '<td></td>';
+            for (var z = 1; z <= selectedDdp.length; z++) {
+                td = td + '<td>' + row.cells[z].innerHTML + '</td>';
+            }
+            var inputId = $(row.cells[selectedDdp.length + 1].innerHTML).attr("id");
+            var inpvalu = $('#' + inputId).val();
+            var QrimgId = "QrImag" + rr;
+            $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append(td + "<td>" + inpvalu + "</td></tr>");
+            var myRows = [];
+            var min = '';
+            var $headers = $("#tableY th");
+            var $rows = $("#tableY tbody tr").each(function (index) {
+                $cells = $(this).find("td");
+                //while (myRows.length > 0) {
+                //    myRows.pop();
+                //}
+
+                myRows[index] = {};
+                $cells.each(function (cellIndex) {
+                    var cn = cellIndex;
+                    if (cn < $cells.length - 1) {
+                        if (cellIndex > 0) {
+                            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+                        }
+                    }
+
+
+                });
+                min = myRows;
+            });
+            var filtered = min.filter(function (el) {
+                return el != null;
+            });
+                        
+            myObj = min;            
+        });
+        return myObj;
+    }
+
+    function GenerateSingleQRcodeForAllRows() {
+        //var ss = html2json();
+        var ss = CopyToSingleQrCodeTable();
+        //var filtered = ss.filter(function (el) {
+        //    return el != null;
+        //});
+        if (ss.length <= 50) {
+            var jsonData = JSON.stringify(ss);
             $('#SinleQrCode').attr("src", "");
-            var Data1 = ko.toJSON(jsonData);
+            var Data1 = ko.toJSON(ss);
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("SingleQRCode", "MSSQL")',
@@ -1038,7 +1106,7 @@
                 contentType: "application/json",
                 success: function (data) {
                     $('#SinleQrCode').attr("src", data);
-                    some = data;
+                    //some = data;
                     $('#myModal4').modal('show');
                 },
                 error: function (error) {

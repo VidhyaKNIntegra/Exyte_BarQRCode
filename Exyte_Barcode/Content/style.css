@@ -90,7 +90,7 @@ body {
     padding-top: 8px;
 }
 .max-hight-scroll {
-    max-height:420px; overflow-y:auto;
+    max-height:470px; overflow-y:auto;
 }
 .gx-wrapper {
     width: 100%;

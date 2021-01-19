@@ -170,6 +170,9 @@
 
 
         $('#DescTxt').val('');
+        $('#CategoryNameTxtErr').text('');
+        $('#SpNameTxtErr').text('');
+        $('#DescTxtErr').text('');
     }
     GetSpNames();
     function GetSpNames() {        
@@ -253,8 +256,11 @@
 
     function EditClear() {
         $('#CategoryNameTxt1').val('');
-        $('#SpNameTxt1').val('');
+        $('#SpNameTxt1').val('choose');
         $('#DescTxt1').val('');
+        $('#CategoryNameTxtErr1').text('');
+        $('#SpNameTxtErr1').text('');
+        $('#DescTxtErr1').text('');
     }
 
     function Save() {
@@ -373,6 +379,9 @@
      }
 
     function edit(num) {
+        $('#CategoryNameTxtErr1').text('');
+        $('#SpNameTxtErr1').text('');
+        $('#DescTxtErr1').text('');
         $('#CategoryId').val('');
         $.ajax({
             type: "GET",
