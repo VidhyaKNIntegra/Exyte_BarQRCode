@@ -40,6 +40,7 @@
                                                     <div class="form-group">
                                                         <label for="serverName" class="control-label">Server</label>
                                                         <input placeholder="Server" type="text" class="form-control required" name="serverName" id="serverName">
+                                                        <span id="serverErr" style="font-size:12px;color:red;"></span>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -69,11 +70,16 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <input type="checkbox" name="Windows" id="Windows" value="windows" /> Windows Authentication?
-                                                        @*<button class="btn btn-primary" onclick="LoadDatabases()">Load Databases</button>*@
+
                                                         <img src="~/images/spin-icon-2.gif" id="loadIcon" style="width:25px;height:25px;" />
                                                         <span id="connectErr" style="font-size:12px;color:red;"></span>
                                                         <span id="connectSuccess" style="font-size:12px;color:green;"></span>
                                                     </div>
+                                                    
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a class="btn btn-primary" style="float:right;" onclick="LoadDatabases()">Connect Sever</a>
+                                                    <span style="color:green;font-size:12px;" id="statusnxt"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -121,6 +127,8 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <a class="btn btn-primary" onclick="Run()">Run</a>
+                                                        <span style="font-size:12px;color:green;" id="runstatus"></span>
+                                                        <span style="font-size:12px;color:red;" id="runstatusErr"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -143,8 +151,8 @@
                                         </div>
                                         <ul class="pager wizard">
                                             <li class="previous"><a href="javascript:void(0)"><i class="icon-left-open"></i>Previous</a></li>
-                                            <li class="next" id="loadButton"><a href="javascript:void(0)" onclick="LoadDatabases()">Next<i class="icon-right-open"></i></a> </li>
-                                            @*<li class="next" id="RunButton"><a href="javascript:void(0)" onclick="Run()">Next<i class="icon-right-open"></i></a> </li>*@
+                                            @*<li class="next" id="loadButton"><a href="javascript:void(0)" onclick="LoadDatabases()">Next<i class="icon-right-open"></i></a> </li>*@
+                                            <li class="next" id="loadButton"><a href="javascript:void(0)">Next<i class="icon-right-open"></i></a> </li>
                                             <li class="next" id="nextbutton"><a href="javascript:void(0)">Next<i class="icon-right-open"></i></a> </li>
                                         </ul>
                                     </div>
@@ -239,7 +247,7 @@
                 <div class="row">
                     @*<div class="col-md-1">
 
-                    </div>*@
+                        </div>*@
                     <div class="col-md-12">
                         @*<table class="table table-striped table-bordered table-hover dataTables-example" id="QrCodeTable"></table>*@
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="QrTable2">
@@ -249,7 +257,7 @@
                     </div>
                     @*<div class="col-md-1">
 
-                    </div>*@
+                        </div>*@
 
                 </div>
             </div>
@@ -303,7 +311,7 @@
                 <div class="row">
                     @*<div class="col-md-1">
 
-                    </div>*@
+                        </div>*@
                     <div class="col-md-12">
                         @*<table class="table table-striped table-bordered table-hover dataTables-example" id="BarcodeTable"></table>*@
                         <table class="table table-striped table-bordered table-hover dataTables-example" id="BarcodeTable2">
@@ -313,7 +321,7 @@
                     </div>
                     @*<div class="col-md-1">
 
-                    </div>*@
+                        </div>*@
 
                 </div>
             </div>
@@ -382,9 +390,9 @@
             $('#serverErr').text('Please enter the server Name');
         }
         else if (auth == "false" && (UserName == '' || Password == '')) {
-            //$('#userNameErr').text('Enter the UserName');
-            //$('#PasswordErr').text('Enter the Password');
-            return false;
+            $('#userNameErr').text('Enter the UserName');
+            $('#PasswordErr').text('Enter the Password');
+            //return false;
         }
         else {
             $('#loadIcon').show();
@@ -395,8 +403,7 @@
                 DataBase: prefixName
             }
             $.ajax({
-                type: "POST",
-                //url: "/MSSQL/GetDatabases",
+                type: "POST",                
                 url:'@Url.Action("GetDatabases", "MSSQL")',
                 data: ko.toJSON(Data),
                 contentType: "application/json",
@@ -409,6 +416,7 @@
                     else {
                         $('#loadIcon').hide();
                         $('#connectSuccess').text('Server Connected');
+                        $('#statusnxt').text('click on next');
                         $('#Databases').empty();
                         var option = '';
                         for (var i = 0; i < data.length; i++) {
@@ -642,18 +650,20 @@
         $('#AvailableDpdwnlist').append(option);
     }
 
-   
+
     function selectAllCheckbox() {
-        if ($('#checkItem').is(':checked')) {            
+        if ($('#checkItem').is(':checked')) {
             $('input:checkbox:visible').prop('checked', true);
-           
+
         }
         else{
             $('input:checkbox').prop('checked', false);
-        }        
+        }
     }
 
     function Run() {
+        $('#runstatus').text('');
+        $('#runstatusErr').text('');
         var options1 = $('#SelectedDpdwnlist option');
         var selectedDdp1 = $.map(options1, function (option) {
             return option.value;
@@ -680,108 +690,77 @@
             }
 
             $.ajax({
-                        type: "POST",
-                        url:'@Url.Action("GetColumnData", "MSSQL")',
-                        data: ko.toJSON(Data),
-                        contentType: "application/json",
-                        success: function (data) {
-                            $("#HashTable").empty();
-                            $("#FilterTable ").empty();
-                            //$("#QrCodeTable").empty();
-                            //$("#BarcodeTable").empty();//barcode
-                            var response = JSON.parse(data);
-                            //var head = "<thead class='thead-inverse'><tr>";
-                            var head = "<thead class='thead-inverse'><tr><th><input type='checkbox' onclick='selectAllCheckbox()' id='checkItem'/></th>";
-                            //var qrhead = "<thead class='thead-inverse'><tr>";
-                            //var barhead = "<thead class='thead-inverse'><tr>";//barcode
-                            $.each(response[0], function (k, v) {
-                                head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
-                                //qrhead = qrhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
-                                //barhead = barhead + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";//barcode
-                            })
-                            head = head + "<th>Url</th><th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
-                            //qrhead = qrhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";
-                            //barhead = barhead + "<th>QR Code</th><th style='display:none;'>json</th></thead></tr>";//barcode
+                type: "POST",
+                url:'@Url.Action("GetColumnData", "MSSQL")',
+                data: ko.toJSON(Data),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data == null)
+                        $('#runstatusErr').text('failed');
+                    else
+                        $('#runstatus').text('Success! click next');
+                    $("#HashTable").empty();
+                    $("#FilterTable ").empty();
+                    var response = JSON.parse(data);
+                    var head = "<thead class='thead-inverse'><tr><th><input type='checkbox' onclick='selectAllCheckbox()' id='checkItem'/></th>";
+                    $.each(response[0], function (k, v) {
+                        head = head + "<th scope='row' style='content-align:left;'>" + k.toString() + "</th>";
+                    })
+                    head = head + "<th>Url</th><th>QR Code</th><th>BarCode</th><th style='display:none;'>json</th></thead></tr>";
+                    $("#HashTable ").append(head);
+                    var body = "<tbody><tr>";
+                    var jsonBarcode;
+                    var img = 1;
+                    $.each(response, function (index, value) {
+                        jsonBarcode = jsonConstruct(index, value);
+                        body = body + "<tr class='content'><td><input type='checkbox' class='checkbxId' /></td>";
+                        $.each(value, function (key, val) {
+                            body = body + "<td>" + val + "</td>";
+                        })
+                        var UrlId = "url" + img;
+                        body = body + "<td><input type='text' class='form-control' id='" + UrlId + "'/></td><td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + "," + UrlId + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode + "," + UrlId + ")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
+                            + " </td > <td style='display:none;'>" +
+                            jsonBarcode
+                            + "</td></tr > ";
+                        img++;
+                    })
 
-                            $("#HashTable ").append(head);
-                            //$("#QrCodeTable ").append(qrhead);
-                            //$("#BarcodeTable").append(barhead);//barcode
-                            var body = "<tbody><tr>";
-                            //var qrbody = "<tbody><tr>";
-                            //var barbody = "<tbody><tr>";//barcode
-                            var jsonBarcode;
-                            var img = 1;
-                            $.each(response, function (index, value) {
-                                jsonBarcode = jsonConstruct(index, value);
-                                //body = body + "<tr class='content'>";
-                                body = body + "<tr class='content'><td><input type='checkbox' class='checkbxId' /></td>";
-                                //qrbody = qrbody + "<tr class='content'>";
-                                //barbody = barbody + "<tr class='content'>";//barcode
+                    body = body + "</tbody>";
+                    $("#userTable").hide();
+                    $("#SearchTable").hide();
+                    $("#HashTable").show();
+                    $("#HashTable").append(body);//append body
 
-                                $.each(value, function (key, val) {
-                                    body = body + "<td>" + val + "</td>";
-                                    //qrbody = qrbody + "<td>" + val + "</td>";
-                                    //barbody = barbody + "<td>" + val + "</td>";//barcode
-                                })
-                                var UrlId = "url" + img;
-                                body = body + "<td><input type='text' class='form-control' id='" + UrlId + "'/></td><td><a data-toggle='modal' data-target='#myModal' onclick='GenerateQRcode(" + jsonBarcode + "," + UrlId + ")' ><img src='../images/qrcode.png' alt='qrcode' width='25' height='25'/></a></td><td><a data-toggle='modal' onclick='GenerateBarcode(" + jsonBarcode + "," + UrlId+")' data-target='#myModal2' ><img src='../images/barcode.png' alt='barcode' width='25' height='25'/></a>"
-                                    + " </td > <td style='display:none;'>" +
-                                    jsonBarcode
-                                    + "</td></tr > ";
-                                //var imgId = "imag" + img;
-                                //var imgId2 = "imagbar" + img;//barcode
-                                //qrbody = qrbody + "<td><img id='" + imgId + "' src='' width='100' height='100'></td>";
-                                //barbody = barbody + "<td><img id='" + imgId2 + "' src='' width='150' height='75'></td>";//barcode
-                                //GenerateQRcodeForeachRow(jsonBarcode, imgId);
-                                //GenerateBarcodeForeachRow(jsonBarcode, imgId2);//barcode
-                                //qrbody = qrbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";
-                                //barbody = barbody + "<td style='display:none;'>" + jsonBarcode + "</td></tr > ";//barcode
-                                img++;
-                            })
-
-                            body = body + "</tbody>";
-                            //qrbody = qrbody + "</tbody>";
-                            //barbody = barbody + "</tbody>";//barcode
-                            $("#userTable").hide();
-                            $("#SearchTable").hide();
-                            $("#HashTable").show();
-                            $("#HashTable").append(body);//append body
-                            //$("#QrCodeTable").append(qrbody);//append body
-                            //$("#BarcodeTable").append(barbody);//append body
-
-                            //========Start Filter====================
-                            var head1 = "<thead class='thead-inverse'><tr>";
-                            for (var i = 0; i < selectedDdp.length; i++) {
-                                head1 = head1 +"<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
-                            }
-                            head1 = head1 + "</thead ></tr >";
-                            $("#FilterTable ").append(head1);
-                            var body1 = "<tbody><tr>";
-                            body1 = body1 + "<tr class='content'>";
-                            var j = 1;
-                            for (var k = 1; k <= selectedDdp.length+1;k++) {
-                                var columnList=arrayElements(k);
-                                var uniqlist = makeUniqueList(columnList);
-                                var foption = "<option>choose</option>";
-                                for (i = 1; i < uniqlist.length; i++) {
-                                    foption += "<option>" + uniqlist[i] + "</option >";
-                                }
-
-                                var selctid = "filterText" + j;
-                                if (j>1) {
-                                    body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
-                                }
-
-                                j++;
-                            }
-                            body1 = body1 + "</tr></tbody>";
-                            //body1 = body1 + "<td><button onclick='filterTable();' class='btn btn-success'>Filter</button></td></tr></tbody>";
-                            $("#FilterTable ").append(body1);
-                            //========End Filter====================
-                        },
-                        error: function (error) {
-                            alert(error.status + " " + error.statusText);
+                    //========Start Filter====================
+                    var head1 = "<thead class='thead-inverse'><tr>";
+                    for (var i = 0; i < selectedDdp.length; i++) {
+                        head1 = head1 + "<th scope='row' style='content-align:left;'>" + selectedDdp[i] + "</th>";
+                    }
+                    head1 = head1 + "</thead ></tr >";
+                    $("#FilterTable ").append(head1);
+                    var body1 = "<tbody><tr>";
+                    body1 = body1 + "<tr class='content'>";
+                    var j = 1;
+                    for (var k = 1; k <= selectedDdp.length + 1; k++) {
+                        var columnList = arrayElements(k);
+                        var uniqlist = makeUniqueList(columnList);
+                        var foption = "<option>choose</option>";
+                        for (i = 1; i < uniqlist.length; i++) {
+                            foption += "<option>" + uniqlist[i] + "</option >";
                         }
+                        var selctid = "filterText" + j;
+                        if (j > 1) {
+                            body1 = body1 + "<td><select id='" + selctid + "' onchange=\"filterText('" + selctid + "');\" class='form-control'>" + foption + "</select></td>";
+                        }
+                        j++;
+                    }
+                    body1 = body1 + "</tr></tbody>";
+                    $("#FilterTable ").append(body1);
+                            //========End Filter====================                            
+                },
+                error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                }
             });
         }
 
@@ -967,61 +946,61 @@
         return false;
     }
 
-    function html2json() {
-        $('#tableY').empty();
-        head ="<thead></thead>";
-        body ="<tbody></tbody>";
-        $('#tableY').append(head);
-        $('#tableY').append(body);
-        var options = $('#SelectedDpdwnlist option');
-        var selectedDdp = $.map(options, function (option) {
-            return option.value;
-        });
-        var col = parseInt(selectedDdp.length);
+    //function html2json() {
+    //    $('#tableY').empty();
+    //    head ="<thead></thead>";
+    //    body ="<tbody></tbody>";
+    //    $('#tableY').append(head);
+    //    $('#tableY').append(body);
+    //    var options = $('#SelectedDpdwnlist option');
+    //    var selectedDdp = $.map(options, function (option) {
+    //        return option.value;
+    //    });
+    //    var col = parseInt(selectedDdp.length);
 
-        for (var j = 0; j < col; j++) {
-            if ($('table#tableY thead').children().length === 0) {
-                $('table#tableY thead').append('<tr></tr>');
-            }
+    //    for (var j = 0; j < col; j++) {
+    //        if ($('table#tableY thead').children().length === 0) {
+    //            $('table#tableY thead').append('<tr></tr>');
+    //        }
 
-            $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
+    //        $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
 
-            $('table#HashTable tbody tr:visible').each(function (i) {
-                if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
-                    $('table#tableY tbody').append('<tr></tr>');
-                }
-                $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append('<td>' + $($(this).children()[j]).text() + '</tr>');
-            });
-        }
+    //        $('table#HashTable tbody tr:visible').each(function (i) {
+    //            if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
+    //                $('table#tableY tbody').append('<tr></tr>');
+    //            }
+    //            $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append('<td>' + $($(this).children()[j]).text() + '</tr>');
+    //        });
+    //    }
 
-        var myRows = [];
-        var $headers = $("#tableY th");
-        var $rows = $("#tableY tbody tr").each(function (index) {
-            $cells = $(this).find("td");
-            myRows[index] = {};
-            $cells.each(function (cellIndex) {
-                myRows[index][$($headers[cellIndex]).html()] = $(this).html();
-            });
-        });
+    //    var myRows = [];
+    //    var $headers = $("#tableY th");
+    //    var $rows = $("#tableY tbody tr").each(function (index) {
+    //        $cells = $(this).find("td");
+    //        myRows[index] = {};
+    //        $cells.each(function (cellIndex) {
+    //            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+    //        });
+    //    });
 
-        // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
-        var myObj = {};
-        //myObj.myrows = myRows;
-        myObj = myRows;
-        $.each(myObj, function (key, value) {
-            if (typeof myObj[key] === 'object' && Object.keys(myObj[key]).length == 0) {
-                delete myObj[key];
-            }
-            else {
-                $.each(value, function (k, v) {
-                    if (v === "" || v === null) {
-                        delete myObj[key];
-                    }
-                })
-            }
-        });
-        return myObj;
-    }
+    //    // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+    //    var myObj = {};
+    //    //myObj.myrows = myRows;
+    //    myObj = myRows;
+    //    $.each(myObj, function (key, value) {
+    //        if (typeof myObj[key] === 'object' && Object.keys(myObj[key]).length == 0) {
+    //            delete myObj[key];
+    //        }
+    //        else {
+    //            $.each(value, function (k, v) {
+    //                if (v === "" || v === null) {
+    //                    delete myObj[key];
+    //                }
+    //            })
+    //        }
+    //    });
+    //    return myObj;
+    //}
 
     function CopyToSingleQrCodeTable() {
         $('#tableY').empty();
@@ -1043,8 +1022,8 @@
             $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
         }
         $('table#tableY thead tr').append('<th>QR Code</th>');
-        
-        var myObj = {}; 
+
+        var myObj = {};
         $('table#HashTable  .checkbxId:checkbox:checked').each(function (i) {
             if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
                 $('table#tableY tbody').append('<tr></tr>');
@@ -1083,22 +1062,21 @@
             var filtered = min.filter(function (el) {
                 return el != null;
             });
-                        
-            myObj = min;            
+
+            myObj = min;
         });
         return myObj;
     }
 
     function GenerateSingleQRcodeForAllRows() {
-        //var ss = html2json();
         var ss = CopyToSingleQrCodeTable();
         //var filtered = ss.filter(function (el) {
         //    return el != null;
         //});
-        if (ss.length <= 50) {
+        if (ss.length <= 8) {
             var jsonData = JSON.stringify(ss);
             $('#SinleQrCode').attr("src", "");
-            var Data1 = ko.toJSON(ss);
+            var Data1 = ko.toJSON(jsonData);
             $.ajax({
                 type: "GET",
                 url: '@Url.Action("SingleQRCode", "MSSQL")',
@@ -1115,7 +1093,7 @@
             });
         }
         else {
-            alert("please select maximum 50 records");
+            alert("please select maximum 8 records");
         }
 
     }
@@ -1187,7 +1165,7 @@
             var td = '<td></td>';
             for (var z = 1; z <= selectedDdp.length; z++) {
                 td = td + '<td>' + row.cells[z].innerHTML + '</td>';
-            } 
+            }
             var inputId = $(row.cells[selectedDdp.length + 1].innerHTML).attr("id");
             var inpvalu = $('#' + inputId).val();
             var QrimgId = "QrImag" + rr;

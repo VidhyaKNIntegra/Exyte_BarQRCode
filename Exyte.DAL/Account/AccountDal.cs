@@ -85,7 +85,7 @@ namespace Exyte.DAL.Account
             try
             {
                 var result = (from im in _db.Roles
-                              where im.RoleName != "Super Admin"
+                              where im.RoleName != "Super Admin" && im.Is_Active==true
                               select new SignUpModel
                               {
                                   RoleId = im.RoleId,
@@ -135,8 +135,8 @@ namespace Exyte.DAL.Account
             try 
             {
                 var res = (from iom in _db.Users
-                           join b in _db.Roles on iom.RoleId equals b.RoleId
-                           where iom.RoleId != 1 && iom.IsActive == true
+                           join b in _db.Roles on iom.RoleId equals b.RoleId      
+                           where iom.UserId != 1 && iom.IsActive == true
                            select new SignUpModel
                            {
                                FirstName = iom.FirstName + (iom.LastName!=null?" " + iom.LastName:""),
@@ -187,7 +187,7 @@ namespace Exyte.DAL.Account
             try
             {
                 var res = (from iom in _db.Roles
-                           where iom.RoleName != "Super Admin"
+                           where iom.RoleName != "Super Admin" && iom.Is_Active==true
                            select new SignUpModel
                            {
                                RoleName = iom.RoleName,
@@ -473,7 +473,7 @@ namespace Exyte.DAL.Account
             {
                 DashBoard res = new DashBoard();
                 res.ActiveUsers = (from o in _db.Users
-                                   where o.IsActive == true
+                                   where o.IsActive == true && o.UserId!=1
 
                                    select o.Role).Count();
                 res.InActiveUsers = (from o in _db.Users
@@ -481,7 +481,7 @@ namespace Exyte.DAL.Account
 
                                      select o.Role).Count();
                 res.ActiveRoles = (from o in _db.Roles
-                                   where o.Is_Active == true
+                                   where o.Is_Active == true && o.RoleId!=1
 
                                    select o.RoleId).Count();
                 res.InActiveRoles = (from o in _db.Roles

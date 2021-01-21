@@ -89,7 +89,7 @@ namespace Exyte_Barcode.Controllers
                     return Json(Url.Action("CommercialDashBoard", "Account"), JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return Json(Url.Action("Index", "Home"), JsonRequestBehavior.AllowGet);
+                    return Json(Url.Action("User", "Account"), JsonRequestBehavior.AllowGet);
             }
             logger.Info("Login failed...");
             return Json("failed", JsonRequestBehavior.AllowGet);

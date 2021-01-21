@@ -64,6 +64,12 @@
                 $('#oldPasswrdTxtErr').text('');
                 $('#newPasswrdTxtErr').text('Enter the New Ppassword');
             }
+            else if (self.NewPassword().length<6) {
+                $('#newPasswrdTxtErr').text('Minimum length of the password is 6');
+            }
+            else if (self.NewPassword().length > 12) {
+                $('#newPasswrdTxtErr').text('Maximum length of the password is 12');
+            }
             else if (self.ConfirmPassword() == '') {
                 $('#newPasswrdTxtErr').text('');
                 $('#confirmPasswrdTxtErr').text('Enter the Confirm Password')

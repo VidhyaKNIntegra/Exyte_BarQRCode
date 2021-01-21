@@ -271,6 +271,10 @@
         $('#PhoneNo').val('');
     }
     function editUserDetails(detail) {
+        $('#FirstNameTxtErr').text('');
+        $('#LastNameTxtErr').text('');
+        $('#EmailTxtErr').text('');
+        $('#PhoneTxtErr').text('');
         //ajax call
         $.ajax({
             type: "GET",
@@ -302,13 +306,11 @@
     function GetRoleDetails() {
         //ajax call
         $.ajax({
-            type: "GET",
-            //url: "/Account/GetRoleDetails",
+            type: "GET",            
             url: '@Url.Action("GetRoleDetails", "Account")',
             contentType: "application/json",
             success: function (data) {
-                $.each(data, function (key, value) {
-                    //alert(value.RoleId + " :: " + value.RoleName);
+                $.each(data, function (key, value) {                    
                     $("#roleTypTxt").append($("<option></option>").val(value.RoleId).html(value.RoleName));
                 });
             },
@@ -321,8 +323,7 @@
     function GetRoleTypes() {
         //ajax call
         $.ajax({
-            type: "GET",
-            //url: "/Account/GetRoleTypes",
+            type: "GET",            
             url: '@Url.Action("GetRoleTypes", "Account")',
             contentType: "application/json",
             success: function (data) {
