@@ -143,9 +143,9 @@
                                                     <thead></thead>
                                                     <tbody></tbody>
                                                 </table>
-                                                @*<buton class="btn btn-success" data-toggle='modal' data-target='#myModal3'>Export QR code</buton>*@
-                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal3' onclick="getFilterData()">Export QR code</buton>
-                                                <buton class="btn btn-success" data-toggle='modal' data-target='#myModal5' onclick="GetBarcodeFilterData()">Export Barcode</buton>
+                                                
+                                                <buton class="btn btn-success" onclick="getFilterData()">Export QR code</buton>
+                                                <buton class="btn btn-success" onclick="GetBarcodeFilterData()">Export Barcode</buton>
                                                 <buton class="btn btn-success" onclick="GenerateSingleQRcodeForAllRows()">Generate Single QR Code</buton>
                                             </div>
                                         </div>
@@ -403,7 +403,7 @@
                 DataBase: prefixName
             }
             $.ajax({
-                type: "POST",                
+                type: "POST",
                 url:'@Url.Action("GetDatabases", "MSSQL")',
                 data: ko.toJSON(Data),
                 contentType: "application/json",
@@ -756,7 +756,7 @@
                     }
                     body1 = body1 + "</tr></tbody>";
                     $("#FilterTable ").append(body1);
-                            //========End Filter====================                            
+                            //========End Filter====================
                 },
                 error: function (error) {
                     alert(error.status + " " + error.statusText);
@@ -1069,32 +1069,38 @@
     }
 
     function GenerateSingleQRcodeForAllRows() {
-        var ss = CopyToSingleQrCodeTable();
-        //var filtered = ss.filter(function (el) {
-        //    return el != null;
-        //});
-        if (ss.length <= 8) {
-            var jsonData = JSON.stringify(ss);
-            $('#SinleQrCode').attr("src", "");
-            var Data1 = ko.toJSON(jsonData);
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("SingleQRCode", "MSSQL")',
-                data: { "Text": Data1},
-                contentType: "application/json",
-                success: function (data) {
-                    $('#SinleQrCode').attr("src", data);
-                    //some = data;
-                    $('#myModal4').modal('show');
-                },
-                error: function (error) {
+        if ($('.checkbxId').is(':checked')) {
+            var ss = CopyToSingleQrCodeTable();
+            //var filtered = ss.filter(function (el) {
+            //    return el != null;
+            //});
+            if (ss.length <= 8) {
+                var jsonData = JSON.stringify(ss);
+                $('#SinleQrCode').attr("src", "");
+                var Data1 = ko.toJSON(jsonData);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("SingleQRCode", "MSSQL")',
+                    data: { "Text": Data1},
+                    contentType: "application/json",
+                    success: function (data) {
+                        $('#SinleQrCode').attr("src", data);
+                        //some = data;
+                        $('#myModal4').modal('show');
+                    },
+                    error: function (error) {
                     alert(error.status + " " + error.statusText);
-                }
-            });
+                    }
+                });
+            }
+            else {
+                alert("please select maximum 8 records");
+            }
         }
         else {
-            alert("please select maximum 8 records");
+            alert('Please Select at least one Record');
         }
+
 
     }
 
@@ -1131,10 +1137,17 @@
     }
 
     function getFilterData() {
-        CopyToQrTable("QrTable2");
-        $('table#QrTable2').find('tr').each(function () {
-            this.removeChild(this.cells[0]);
-        });
+
+        if ($('.checkbxId').is(':checked')) {
+            CopyToQrTable("QrTable2");
+            $('table#QrTable2').find('tr').each(function () {
+                this.removeChild(this.cells[0]);
+            });
+            $('#myModal3').modal('show');
+        }
+        else {
+            alert('Please Select at least one Record');
+        }
     }
     function CopyToQrTable(QrTable1) {
         $('#' + QrTable1).empty();
@@ -1208,10 +1221,16 @@
     }
 
     function GetBarcodeFilterData() {
-        CopyToBarcodeTable("BarcodeTable2");
-        $('table#BarcodeTable2').find('tr').each(function () {
-            this.removeChild(this.cells[0]);
-        });
+        if ($('.checkbxId').is(':checked')) {
+            CopyToBarcodeTable("BarcodeTable2");
+            $('table#BarcodeTable2').find('tr').each(function () {
+                this.removeChild(this.cells[0]);
+            });
+            $('#myModal5').modal('show');
+        }
+        else {
+            alert('Please Select at least one Record');
+        }
     }
 
     function CopyToBarcodeTable(QrTable1) {

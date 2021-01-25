@@ -62,7 +62,7 @@
             }
             else if (self.NewPassword() == '') {
                 $('#oldPasswrdTxtErr').text('');
-                $('#newPasswrdTxtErr').text('Enter the New Ppassword');
+                $('#newPasswrdTxtErr').text('Enter the New Password');
             }
             else if (self.NewPassword().length<6) {
                 $('#newPasswrdTxtErr').text('Minimum length of the password is 6');
@@ -72,10 +72,10 @@
             }
             else if (self.ConfirmPassword() == '') {
                 $('#newPasswrdTxtErr').text('');
-                $('#confirmPasswrdTxtErr').text('Enter the Confirm Password')
+                $('#confirmPasswrdTxtErr').text('Enter the Confirm Password');
             }
             else if (self.ConfirmPassword() != self.NewPassword()) {
-                $('#confirmPasswrdTxtErr').text('New Password and Confirm Password not matching')
+                $('#confirmPasswrdTxtErr').text('New Password and Confirm Password not matching');
             }
             else {
                 var PData = {

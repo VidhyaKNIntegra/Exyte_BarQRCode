@@ -15,7 +15,7 @@
             </nav>
         </div>
         <div class="gx-card">
-            <div class="gx-card-body">
+            <div class="gx-card-body max-hight-scroll">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="userTable"></table>
                 </div>
@@ -175,7 +175,7 @@
                                 </div>
                                 <div class="col-sm-8">
 
-                                    <input type="text" class="form-control" data-bind="value:PhoneNo1" id="PhoneTxt" />
+                                    <input type="text" class="form-control" data-bind="value:PhoneNo1" id="PhoneTxt1" />
                                     <span id="PhoneTxtErr1" style="color:red;font-size:12px;"></span>
                                 </div>
                             </div>
@@ -230,6 +230,19 @@
     var UserID = '@Session["UserID"]';
     var UserName = '@Session["UserName"]';
     var CategoryID = '@Session["CategoryID"]';
+
+    $('#PhoneTxt1').keyup(function (e) {
+        if (/\D/g.test(this.value)) {
+            // Filter non-digits from input value.
+            this.value = this.value.replace(/\D/g, '');
+        }
+    });
+    $('#PhoneTxt').keyup(function (e) {
+        if (/\D/g.test(this.value)) {
+            // Filter non-digits from input value.
+            this.value = this.value.replace(/\D/g, '');
+        }
+    });
 
     LoadUserTable();
     function LoadUserTable() {
@@ -347,14 +360,14 @@
             cancelButtonText: "No, cancel it!",
             closeOnConfirm: false,
             closeOnCancel: false
-        },
+            },
             function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
                         type: "POST",
                         url: '@Url.Action("DeleteUser", "Account")',
                         contentType: "application/json",
-                        data: { id: detail },
+                        data: ko.toJSON({ id: detail }),
                         success: function (data) {
                             if (data == 'success') {
                                 sweetAlert("Success","User deleted successfully!",  "success");
@@ -424,7 +437,7 @@
         //}
         else if (typeof (self.PhoneNo1()) == 'undefined' || self.PhoneNo1() == '') {
             $('#PhoneTxtErr1').text('Enter the Phone Number');
-        } else if (mobnoLength != 10) {
+        } else if (self.PhoneNo1().length != 10) {
             $('#PhoneTxtErr1').text('Enter the valid Phone Number');
         } else if (typeof (self.Email1()) == 'undefined' || self.Email1() == '') {
             $('#EmailTxtErr1').text('Enter the Email');
@@ -502,8 +515,11 @@
         else if (self.Email() == '') {
             $('#EmailTxtErr').text('Enter the Email');
         }
-        else if (self.PhoneNo() == '') {
+        else if (self.PhoneNo() == '' || typeof (self.PhoneNo()) == 'undefined') {
             $('#PhoneTxtErr').text('Enter the Phone No');
+        }
+        else if (self.PhoneNo().length != 10) {
+            $('#PhoneTxtErr').text('Enter the valid Phone No');
         }
         else {
             var Pid = $('#roleTypTxt').children('option:selected').val();

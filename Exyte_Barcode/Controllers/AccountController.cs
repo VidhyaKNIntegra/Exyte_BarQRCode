@@ -89,7 +89,7 @@ namespace Exyte_Barcode.Controllers
                     return Json(Url.Action("CommercialDashBoard", "Account"), JsonRequestBehavior.AllowGet);
                 }
                 else
-                    return Json(Url.Action("User", "Account"), JsonRequestBehavior.AllowGet);
+                    return Json(Url.Action("UserDashboard", "Account"), JsonRequestBehavior.AllowGet);
             }
             logger.Info("Login failed...");
             return Json("failed", JsonRequestBehavior.AllowGet);
@@ -323,6 +323,12 @@ namespace Exyte_Barcode.Controllers
             DashBoard response = new DashBoard();
             response = userRepository.CommercialDashboardDetails();
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [SessionTimeout]
+        public ActionResult UserDashboard()
+        {
+            return View();
         }
     }
 }
