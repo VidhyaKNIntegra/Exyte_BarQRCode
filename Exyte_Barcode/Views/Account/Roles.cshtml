@@ -225,7 +225,8 @@
 
 
     function editRole(Id) {
-
+        $('#permissonErr').text('');        
+        $('#RoleDescTxtErr').text('');
         $.ajax({
             type: "GET",
             //url: "/Account/GetParticularRole/" + Id,
@@ -371,6 +372,7 @@
 
         self.UpdateRoleDetails = function () {
             $('#RoleDescTxtErr').text('');
+            $('#permissonErr').text('');
             if (self.Description() == '' || self.Description() == undefined) {
                 $('#RoleDescTxtErr').text('Enter the description');
             }

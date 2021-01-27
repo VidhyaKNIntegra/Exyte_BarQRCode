@@ -143,10 +143,11 @@
                                                     <thead></thead>
                                                     <tbody></tbody>
                                                 </table>
-                                                
+
                                                 <buton class="btn btn-success" onclick="getFilterData()">Export QR code</buton>
                                                 <buton class="btn btn-success" onclick="GetBarcodeFilterData()">Export Barcode</buton>
                                                 <buton class="btn btn-success" onclick="GenerateSingleQRcodeForAllRows()">Generate Single QR Code</buton>
+                                                <buton class="btn btn-success" onclick="GenerateSingleBarcodeForAllRows()">Generate Single Barcode</buton>
                                             </div>
                                         </div>
                                         <ul class="pager wizard">
@@ -299,6 +300,36 @@
     </div>
 </div>
 
+<div class="modal fade" id="myModal6" role="dialog">
+    <div class="modal-dialog" style="max-width:900px">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Barcode</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-10">
+                        <img id="SinleBarcode" src="" width="350" height="190" />
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="PrintImage('SinleBarcode')">Print</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class="modal fade" id="myModal5" role="dialog">
     <div class="modal-dialog" style="max-width:900px">
         <!-- Modal content-->
@@ -392,7 +423,6 @@
         else if (auth == "false" && (UserName == '' || Password == '')) {
             $('#userNameErr').text('Enter the UserName');
             $('#PasswordErr').text('Enter the Password');
-            //return false;
         }
         else {
             $('#loadIcon').show();
@@ -438,9 +468,7 @@
         }
     }
 
-
     function LoadTables() {
-
         var dbName = $('#Databases').val();
         cData = {
             DataBase: dbName
@@ -472,7 +500,6 @@
 
         $.ajax({
             type: "GET",
-            //url: "/MSSQL/GetTableRecords",
             url:'@Url.Action("GetTableRecords", "MSSQL")',
             data: {
                 'dataBase': dbName,
@@ -510,7 +537,6 @@
 
     var cols = new Array();
 
-
     function LoadColumns() {
         if ($('#Tables').val() == "choose") {
             alert('Please select the Table');
@@ -541,22 +567,17 @@
                     $('#columns').append(option);
                     var option1 = '<option value="choose" selected>choose </option>';
                     $('#columns').append(option1);
-                    //$("#columns option[value='PnPID']").remove();
                     $('#AvailableDpdwnlist').empty();
                     $('#AvailableDpdwnlist').append(option);
                     $('#SelectedDpdwnlist').empty();
                     cols = [];
                     cols = data;
-                    //$("#AvailableDpdwnlist option[value='PnPID']").remove();
-
                     $('#searchText').val('');
                 },
                 error: function (error) {
                     alert(error.status + " " + error.statusText);
                 }
             });
-
-            //loadData();
         }
     }
 
@@ -584,7 +605,6 @@
                 }
                 $.ajax({
                     type: "POST",
-                    //url: "/MSSQL/GetColumnFiterTableData",
                     url:'@Url.Action("GetColumnFiterTableData", "MSSQL")',
                     data: ko.toJSON(Data),
                     contentType: "application/json",
@@ -767,20 +787,6 @@
     }
 
 
-
-    //function filterTable() {
-    //    var j = 1;
-    //    var selctid = [];
-    //    for (var k = 1; k <= selectedDdp.length; k++) {
-    //        selctid.push("filterText" + j);
-    //        j++;
-
-    //    }
-
-    //    $("#FilterTable ").append(body1);
-
-    //}
-
     function arrayElements(ele) {
         var arr = [];
         $("#HashTable tr").each(function () {
@@ -946,62 +952,6 @@
         return false;
     }
 
-    //function html2json() {
-    //    $('#tableY').empty();
-    //    head ="<thead></thead>";
-    //    body ="<tbody></tbody>";
-    //    $('#tableY').append(head);
-    //    $('#tableY').append(body);
-    //    var options = $('#SelectedDpdwnlist option');
-    //    var selectedDdp = $.map(options, function (option) {
-    //        return option.value;
-    //    });
-    //    var col = parseInt(selectedDdp.length);
-
-    //    for (var j = 0; j < col; j++) {
-    //        if ($('table#tableY thead').children().length === 0) {
-    //            $('table#tableY thead').append('<tr></tr>');
-    //        }
-
-    //        $('table#tableY thead tr').append('<th>' + $($('table#HashTable thead tr').children()[j]).text() + '</th>');
-
-    //        $('table#HashTable tbody tr:visible').each(function (i) {
-    //            if ($('table#tableY tbody').children().length != $('table#HashTable tbody').children().length) {
-    //                $('table#tableY tbody').append('<tr></tr>');
-    //            }
-    //            $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append('<td>' + $($(this).children()[j]).text() + '</tr>');
-    //        });
-    //    }
-
-    //    var myRows = [];
-    //    var $headers = $("#tableY th");
-    //    var $rows = $("#tableY tbody tr").each(function (index) {
-    //        $cells = $(this).find("td");
-    //        myRows[index] = {};
-    //        $cells.each(function (cellIndex) {
-    //            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
-    //        });
-    //    });
-
-    //    // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
-    //    var myObj = {};
-    //    //myObj.myrows = myRows;
-    //    myObj = myRows;
-    //    $.each(myObj, function (key, value) {
-    //        if (typeof myObj[key] === 'object' && Object.keys(myObj[key]).length == 0) {
-    //            delete myObj[key];
-    //        }
-    //        else {
-    //            $.each(value, function (k, v) {
-    //                if (v === "" || v === null) {
-    //                    delete myObj[key];
-    //                }
-    //            })
-    //        }
-    //    });
-    //    return myObj;
-    //}
-
     function CopyToSingleQrCodeTable() {
         $('#tableY').empty();
         head = "<thead></thead>";
@@ -1035,7 +985,6 @@
             }
             var inputId = $(row.cells[selectedDdp.length + 1].innerHTML).attr("id");
             var inpvalu = $('#' + inputId).val();
-            //var QrimgId = "QrImag" + rr;
             $('table#tableY tbody tr:nth-child(' + (i + 1) + ')').append(td + "<td>" + inpvalu + "</td></tr>");
             var myRows = [];
             var min = '';
@@ -1074,7 +1023,7 @@
             //var filtered = ss.filter(function (el) {
             //    return el != null;
             //});
-            if (ss.length <= 8) {
+            if (ss.length <= 30) {
                 var jsonData = JSON.stringify(ss);
                 $('#SinleQrCode').attr("src", "");
                 var Data1 = ko.toJSON(jsonData);
@@ -1084,9 +1033,40 @@
                     data: { "Text": Data1},
                     contentType: "application/json",
                     success: function (data) {
-                        $('#SinleQrCode').attr("src", data);
-                        //some = data;
+                        $('#SinleQrCode').attr("src", data);                       
                         $('#myModal4').modal('show');
+                    },
+                    error: function (error) {
+                    alert(error.status + " " + error.statusText);
+                    }
+                });
+            }
+            else {
+                alert("please select maximum 8 records");
+            }
+        }
+        else {
+            alert('Please Select at least one Record');
+        }
+
+
+    }
+
+    function GenerateSingleBarcodeForAllRows() {
+        if ($('.checkbxId').is(':checked')) {
+            var ss = CopyToSingleQrCodeTable();            
+            if (ss.length <= 30) {
+                var jsonData = JSON.stringify(ss);
+                $('#SinleQrCode').attr("src", "");
+                var Data1 = ko.toJSON(jsonData);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("SingleBarCode", "MSSQL")',
+                    data: { "Text": Data1},
+                    contentType: "application/json",
+                    success: function (data) {
+                        $('#SinleBarcode').attr("src", data);                       
+                        $('#myModal6').modal('show');
                     },
                     error: function (error) {
                     alert(error.status + " " + error.statusText);
@@ -1210,11 +1190,6 @@
             });
             var jsonData = JSON.stringify(filtered);
             GenerateQRcodeForeachRow(jsonData, QrimgId);
-            //var myObj = {};
-            //myObj.myrows = myRows;
-           // myObj = myRows;
-           // var jsonData = JSON.stringify(myObj);
-            //GenerateQRcodeForeachRow(jsonData, QrimgId);
             rr++;
         });
 
